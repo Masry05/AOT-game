@@ -6,10 +6,4 @@ public abstract class Weapon {
 	public Weapon(int baseDamage) {
 		this.baseDamage= baseDamage;
 	}
-	
-	
-	
-	
-	
-
 }

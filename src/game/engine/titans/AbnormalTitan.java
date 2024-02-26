@@ -9,4 +9,8 @@ public class AbnormalTitan extends Titan {
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,
 				resourcesValue,dangerLevel);
 	}	
+	
+	public int compareTo(Object o) {
+		return super.compareTo((Titan) o);
+	}	
 }
