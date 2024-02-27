@@ -1,15 +1,11 @@
 package game.engine.titans;
 
-public class ColossalTitan extends Titan {
+public class ColossalTitan extends Titan implements Comparable <Titan>{
 	
 	private static final int TITAN_CODE = 4;
 	
-	ColossalTitan(int baseHealth, int baseDamage, int heightInMeters, int distanceFromBase,
+	public ColossalTitan(int baseHealth, int baseDamage, int heightInMeters, int distanceFromBase,
 			int speed, int resourcesValue, int dangerLevel){
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,resourcesValue,dangerLevel);
-	}
-	
-	public int compareTo(Object o) {
-		return super.compareTo((Titan) o);
 	}	
 }

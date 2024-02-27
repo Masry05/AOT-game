@@ -3,12 +3,12 @@ package game.engine.weapons;
 public class WeaponRegistry {
 	private final int code;
 	private int price;
-	private final int damage;
+	private int damage; // should be final like in Weapon class??
 	private String name;
 	private int minRange;
 	private int maxRange;
 
-	public WeaponRegistry(int code, int price) {// damage is final so has to be initialized
+	public WeaponRegistry(int code, int price) { // if damage is final it also has to be initialized
 		this.code = code;
 		this.price = price;
 	}
@@ -21,7 +21,6 @@ public class WeaponRegistry {
 	}
 
 	public WeaponRegistry(int code, int price, int damage, String name, int minRange, int maxRange) {
-		super();
 		this.code = code;
 		this.price = price;
 		this.damage = damage;

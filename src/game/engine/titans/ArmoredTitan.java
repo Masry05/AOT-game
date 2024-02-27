@@ -1,16 +1,14 @@
 package game.engine.titans;
 
-public class ArmoredTitan extends Titan {
+public class ArmoredTitan extends Titan implements Comparable <Titan> {
 	
 	private static final int TITAN_CODE = 3;
 	
-	ArmoredTitan(int baseHealth, int baseDamage, int heightInMeters, int distanceFromBase,
+	public ArmoredTitan(int baseHealth, int baseDamage, int heightInMeters, int distanceFromBase,
 			int speed, int resourcesValue, int dangerLevel){
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,
 				resourcesValue,dangerLevel);
 	}	
 	
-	public int compareTo(Object o) {
-		return super.compareTo((Titan) o);
-	}	
+		
 }

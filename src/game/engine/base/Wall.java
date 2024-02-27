@@ -1,6 +1,7 @@
 package game.engine.base;
 
 public class Wall  // implements Attackee 
+                   // resources value is -1
 {
 	
 	private final int baseHealth;
@@ -22,10 +23,4 @@ public class Wall  // implements Attackee
 	public void setCurrentHealth(int currentHealth) {
 		this.currentHealth = currentHealth;
 	}
-
-	public static void main(String[] args) {
-		
-
-	}
-
 }
