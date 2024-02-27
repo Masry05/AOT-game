@@ -7,15 +7,15 @@ import game.engine.weapons.Weapon;
 
 public class Lane implements Comparable<Lane>{
 	private final Wall laneWall;
-	private int dangerLevel;
-	private final PriorityQueue<Titan> titans;  //error cause Titan class not here 
-	private ArrayList<Weapon> weapons;
+	private int dangerLevel;// gets affected by titans.
+	private final PriorityQueue<Titan> titans;
+	private final ArrayList<Weapon> weapons;
 	
 	public Lane(Wall laneWall) {
 		this.laneWall = laneWall;
 		this.dangerLevel = 0;  
-		this.titans = new PriorityQueue<Titan>(0);
-		this.weapons = new ArrayList<Weapon>(0);;
+		this.titans = new PriorityQueue<Titan>();
+		this.weapons = new ArrayList<Weapon>();
 	}
 	public Wall getLaneWall() {
 		return laneWall;
@@ -38,9 +38,6 @@ public class Lane implements Comparable<Lane>{
 	}
 
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-	}
 	
 }
