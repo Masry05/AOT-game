@@ -1,8 +1,10 @@
 package game.engine.titans;
 
-public abstract class Titan implements Comparable <Titan> {
-	// implements Attackee , Attacker, Mobil
-	//should we implement Comparable in all subclasses
+import game.engine.interfaces.Attackee;
+import game.engine.interfaces.Attacker;
+import game.engine.interfaces.Mobil;
+
+public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attackee {
 	
 	private final int baseHealth;
 	private int currentHealth;
@@ -37,7 +39,7 @@ public abstract class Titan implements Comparable <Titan> {
 		this.currentHealth = currentHealth;
 	}
 	
-	public int getBaseDamage() {
+	public int getDamage() {
 		return baseDamage;
 	}
 	
@@ -45,12 +47,12 @@ public abstract class Titan implements Comparable <Titan> {
 		return heightInMeters;
 	}
 
-	public int getDistanceFromBase() {
+	public int getDistance() {
 		return distanceFromBase;
 	}
 
-	public void setDistanceFromBase(int distanceFromBase) {
-		this.distanceFromBase = distanceFromBase;
+	public void setDistance(int distance) {
+		this.distanceFromBase = distance;
 	}
 
 	public int getSpeed() {
@@ -73,5 +75,4 @@ public abstract class Titan implements Comparable <Titan> {
 	public int compareTo(Titan o) {
 		return this.distanceFromBase-o.distanceFromBase;
 	}	
-	
 }
