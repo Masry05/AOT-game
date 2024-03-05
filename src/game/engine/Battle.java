@@ -11,7 +11,7 @@ import static game.engine.dataloader.DataLoader.readTitanRegistry;
 
 public class Battle {
 
-	private final static int[][] PHASES_APPROACHING_TITANS = new int[3][];
+	private final static int[][] PHASES_APPROACHING_TITANS = new int[3][7];
 	private final static int WALL_BASE_HEALTH = 10000;
 	private int numberOfTurns;
 	private int resourcesGathered;
