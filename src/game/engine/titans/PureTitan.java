@@ -1,7 +1,6 @@
 package game.engine.titans;
 
-public class PureTitan extends Titan implements Comparable <Titan>{
-	// implements Attackee , Attacker, Mobil
+public class PureTitan extends Titan{
 	
 	private static final int TITAN_CODE = 1;
 	
@@ -9,5 +8,5 @@ public class PureTitan extends Titan implements Comparable <Titan>{
 			int speed, int resourcesValue, int dangerLevel){
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,
 				resourcesValue,dangerLevel);
-	}	
+	}
 }

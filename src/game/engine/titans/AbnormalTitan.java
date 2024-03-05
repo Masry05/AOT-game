@@ -1,7 +1,6 @@
 package game.engine.titans;
 
-public class AbnormalTitan extends Titan implements Comparable <Titan>{
-	// implements Attackee , Attacker, Mobil
+public class AbnormalTitan extends Titan{
 	
 	private static final int TITAN_CODE = 2;
 	
