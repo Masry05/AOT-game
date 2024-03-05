@@ -1,6 +1,6 @@
 package game.engine.titans;
 
-public class ColossalTitan extends Titan implements Comparable <Titan>{
+public class ColossalTitan extends Titan{
 	
 	private static final int TITAN_CODE = 4;
 	

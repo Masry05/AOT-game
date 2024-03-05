@@ -1,4 +1,4 @@
-package game.engine.dataloader;
+ package game.engine.dataloader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,6 +40,7 @@ public class DataLoader {
 	
 	public static void main(String[] args) throws IOException {
 	    String csvFile = "/Users/salmatarek/Documents/GitHub/AOT/titans.csv";
+		//String csvFile = ""
 	    //how is the path universal
 	    String [][] titans = readCSV(csvFile);
 	    for(int i=0;i<titans.length;i++) {

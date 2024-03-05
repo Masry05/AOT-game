@@ -1,8 +1,8 @@
 package game.engine.base;
 
-public class Wall  // implements Attackee 
-                   // resources value is -1
-{
+import game.engine.interfaces.Attackee;
+
+public class Wall implements Attackee{
 	
 	private final int baseHealth;
 	private int currentHealth;
@@ -20,7 +20,10 @@ public class Wall  // implements Attackee
 		return currentHealth;
 	}
 
-	public void setCurrentHealth(int currentHealth) {
-		this.currentHealth = currentHealth;
+	public void setCurrentHealth(int health) {
+		this.currentHealth = health;
+	}
+	public int getResourcesValue() {
+		return -1;
 	}
 }
