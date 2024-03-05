@@ -73,6 +73,6 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	
 	@Override 
 	public int compareTo(Titan o) {
-		return this.distanceFromBase-o.distanceFromBase;
+		return o.distanceFromBase-this.distanceFromBase;
 	}	
 }

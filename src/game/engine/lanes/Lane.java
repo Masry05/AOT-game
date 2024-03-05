@@ -29,12 +29,12 @@ public class Lane implements Comparable<Lane>{
 	public PriorityQueue <Titan> getTitans() {
 		return titans;
 	}
-	public ArrayList <Weapon> getWeapons() {
+	public ArrayList<Weapon> getWeapons() {
 		return weapons;
 	}
 	@Override
 	public int compareTo(Lane o) {
-		return dangerLevel-o.dangerLevel;
+		return o.dangerLevel-this.dangerLevel;
 	}
 
 
