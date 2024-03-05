@@ -7,7 +7,7 @@ import game.engine.weapons.Weapon;
 
 public class Lane implements Comparable<Lane>{
 	private final Wall laneWall;
-	private int dangerLevel;// gets affected by titans.
+	private int dangerLevel;
 	private final PriorityQueue<Titan> titans;
 	private final ArrayList<Weapon> weapons;
 	
@@ -26,10 +26,10 @@ public class Lane implements Comparable<Lane>{
 	public void setDangerLevel(int dangerLevel) {
 		this.dangerLevel = dangerLevel;
 	}
-	public PriorityQueue<Titan> getTitans() {
+	public PriorityQueue <Titan> getTitans() {
 		return titans;
 	}
-	public ArrayList<Weapon> getWeapons() {
+	public ArrayList <Weapon> getWeapons() {
 		return weapons;
 	}
 	@Override
