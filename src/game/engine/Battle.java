@@ -11,7 +11,9 @@ import static game.engine.dataloader.DataLoader.readTitanRegistry;
 
 public class Battle {
 
-	private final static int[][] PHASES_APPROACHING_TITANS = new int[3][7];
+	private final static int[][] PHASES_APPROACHING_TITANS = {{ 1, 1, 1, 2, 1, 3, 4 },
+															  { 2, 2, 2, 1, 3, 3, 4 },
+															  { 4, 4, 4, 4, 4, 4, 4 }};
 	private final static int WALL_BASE_HEALTH = 10000;
 	private int numberOfTurns;
 	private int resourcesGathered;
@@ -37,10 +39,11 @@ public class Battle {
 		this.approachingTitans = new ArrayList<Titan> ();
 		this.lanes = new PriorityQueue <Lane> ();
 		this.originalLanes= new ArrayList <Lane>();
+		initializeLanes(initialNumOfLanes);
 	}
 	
 	private void initializeLanes(int numOfLanes) {
-		for(int i= numOfLanes ; i>=0 ; i--){
+		for(int i= numOfLanes ; i>0 ; i--){
 			Lane temp= new Lane(new Wall(WALL_BASE_HEALTH));
 			lanes.add(temp);
 			originalLanes.add(temp);
