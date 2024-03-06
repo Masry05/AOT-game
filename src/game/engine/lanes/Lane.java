@@ -34,7 +34,7 @@ public class Lane implements Comparable<Lane>{
 	}
 	@Override
 	public int compareTo(Lane o) {
-		return o.dangerLevel-this.dangerLevel;
+		return this.dangerLevel - o.dangerLevel;
 	}
 
 
