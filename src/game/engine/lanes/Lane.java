@@ -24,7 +24,7 @@ public class Lane implements Comparable<Lane>{
 		return dangerLevel;
 	}
 	public void setDangerLevel(int dangerLevel) {
-		this.dangerLevel = dangerLevel;
+		this.dangerLevel = dangerLevel; //CHECK IF NEGATIVE?
 	}
 	public PriorityQueue <Titan> getTitans() {
 		return titans;

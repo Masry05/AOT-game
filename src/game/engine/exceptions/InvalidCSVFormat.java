@@ -14,9 +14,7 @@ public class InvalidCSVFormat extends IOException {
 	
 	public InvalidCSVFormat(String message, String inputLine) {
 		super(message);
-		this.inputLine= inputLine;
-		
-		// TODO Auto-generated constructor stub
+		this.inputLine = inputLine;
 	}
 
 	public String getInputLine() {
