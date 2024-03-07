@@ -52,7 +52,7 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	}
 
 	public void setDistance(int distance) {
-		this.distanceFromBase = distance;
+		this.distanceFromBase = distance>0? distance : 0;
 	}
 
 	public int getSpeed() {
@@ -60,7 +60,7 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	}
 
 	public void setSpeed(int speed) {
-		this.speed = speed;
+		this.speed = speed>0? speed : 0;
 	}
 	
 	public int getResourcesValue() {

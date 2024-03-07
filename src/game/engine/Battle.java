@@ -51,7 +51,7 @@ public class Battle {
 	}
 	
 	public void setNumberOfTurns(int numberOfTurns) {
-		this.numberOfTurns = numberOfTurns;
+		this.numberOfTurns = numberOfTurns>0?numberOfTurns:0;
 	}
 
 	public void setResourcesGathered(int resourcesGathered) {
@@ -71,15 +71,7 @@ public class Battle {
 	}
 
 	public void setTitanSpawnDistance(int titanSpawnDistance) {
-		this.titanSpawnDistance = titanSpawnDistance;
-	}
-
-	public static int[][] getPhasesApproachingTitans() {
-		return PHASES_APPROACHING_TITANS;
-	}
-
-	public static int getWallBaseHealth() {
-		return WALL_BASE_HEALTH;
+		this.titanSpawnDistance = titanSpawnDistance>0?titanSpawnDistance:0;
 	}
 
 	public int getNumberOfTurns() {

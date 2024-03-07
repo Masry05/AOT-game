@@ -12,8 +12,7 @@ public class InsufficientResourcesException  extends GameActionException {
 
 	public InsufficientResourcesException(String message,int resourcesProvided) {
 		super(message);
-		this.resourcesProvided= resourcesProvided;
-		// TODO Auto-generated constructor stub
+		this.resourcesProvided = resourcesProvided;
 	}
 	
 	public int getResourcesProvided() {
