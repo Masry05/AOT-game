@@ -7,13 +7,13 @@ import static game.engine.dataloader.DataLoader.readWeaponRegistry;
 
 public class WeaponFactory {
 
-	private final HashMap<Integer,WeaponRegistry> weaponShop;
+	private final HashMap <Integer,WeaponRegistry> weaponShop;
 	
 	public WeaponFactory() throws IOException{
 		weaponShop = readWeaponRegistry();
 	}
 
-	public HashMap<Integer, WeaponRegistry> getWeaponShop() {
+	public HashMap <Integer, WeaponRegistry> getWeaponShop() {
 		return weaponShop;
 	}
 	
