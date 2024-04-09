@@ -4,4 +4,7 @@ public interface Attackee {
 	int getCurrentHealth();
 	void setCurrentHealth(int health);
 	int getResourcesValue();
+	default boolean isDefeated() {
+		return getCurrentHealth()<=0;
+	}
 }

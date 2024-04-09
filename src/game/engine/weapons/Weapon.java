@@ -7,6 +7,7 @@ public abstract class Weapon implements Attacker{
 	private final int baseDamage;
 
 	public Weapon(int baseDamage) {
+		super();
 		this.baseDamage= baseDamage;
 	}
 	

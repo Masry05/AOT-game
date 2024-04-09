@@ -8,6 +8,7 @@ public class FactoryResponse {
 	private final int remainingResources;
 	
 	public FactoryResponse(Weapon weapon,int remainingResources) {
+		super();
 		this.weapon = weapon;
 		this.remainingResources = remainingResources;
 	}
