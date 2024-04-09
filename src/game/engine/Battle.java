@@ -17,7 +17,7 @@ public class Battle {
 	private final static int WALL_BASE_HEALTH = 10000;
 	private int numberOfTurns;
 	private int resourcesGathered;
-	BattlePhase battlePhase;
+	private BattlePhase battlePhase;
 	private int numberOfTitansPerTurn;
 	private int score;
 	private int titanSpawnDistance;
@@ -28,6 +28,7 @@ public class Battle {
 	private final ArrayList<Lane> originalLanes;
 	
 	public Battle(int numberOfTurns,int score,int titanSpawnDistance,int initialNumOfLanes, int initialResourcesPerLane)throws IOException{
+		super();
 		this.numberOfTurns = numberOfTurns;
 		this.score = score;
 		this.titanSpawnDistance = titanSpawnDistance;
@@ -44,14 +45,14 @@ public class Battle {
 	
 	private void initializeLanes(int numOfLanes) {
 		for(int i= numOfLanes ; i>0 ; i--){
-			Lane temp= new Lane(new Wall(WALL_BASE_HEALTH));
-			lanes.add(temp);
-			originalLanes.add(temp);
+			Lane l= new Lane(new Wall(WALL_BASE_HEALTH));
+			lanes.add(l);
+			originalLanes.add(l);
 		}
 	}
 	
 	public void setNumberOfTurns(int numberOfTurns) {
-		this.numberOfTurns = numberOfTurns>0?numberOfTurns:0;
+		this.numberOfTurns = numberOfTurns;
 	}
 
 	public void setResourcesGathered(int resourcesGathered) {
@@ -71,7 +72,7 @@ public class Battle {
 	}
 
 	public void setTitanSpawnDistance(int titanSpawnDistance) {
-		this.titanSpawnDistance = titanSpawnDistance>0?titanSpawnDistance:0;
+		this.titanSpawnDistance = titanSpawnDistance;
 	}
 
 	public int getNumberOfTurns() {

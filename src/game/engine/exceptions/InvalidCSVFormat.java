@@ -2,6 +2,7 @@ package game.engine.exceptions;
 
 import java.io.IOException;
 
+@SuppressWarnings("serial")
 public class InvalidCSVFormat extends IOException {
 	
 	private static final String MSG= "Invalid input detected while reading csv file, input = \n";

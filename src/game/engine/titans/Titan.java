@@ -17,6 +17,7 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	
 	public Titan(int baseHealth, int baseDamage, int heightInMeters, int distanceFromBase, 
 			int speed, int resourcesValue, int dangerLevel){
+		super();
 		this.baseHealth = baseHealth;
 		this.currentHealth = baseHealth;
 		this.baseDamage = baseDamage;
@@ -60,7 +61,7 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	}
 
 	public void setSpeed(int speed) {
-		this.speed = speed>0? speed : 0;
+		this.speed = speed;
 	}
 	
 	public int getResourcesValue() {
