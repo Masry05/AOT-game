@@ -8,6 +8,7 @@ public class Wall implements Attackee{
 	private int currentHealth;
 
 	public Wall(int baseHealth) {
+		super();
 		this.baseHealth = baseHealth;
 		this.currentHealth = baseHealth;
 	}

@@ -9,11 +9,13 @@ public class WeaponRegistry {
 	private int maxRange;
 
 	public WeaponRegistry(int code, int price) {
+		super();
 		this.code = code;
 		this.price = price;
 	}
 
 	public WeaponRegistry(int code, int price, int damage, String name) {
+		super();
 		this.code = code;
 		this.price = price;
 		this.damage = damage;
@@ -21,6 +23,7 @@ public class WeaponRegistry {
 	}
 
 	public WeaponRegistry(int code, int price, int damage, String name, int minRange, int maxRange) {
+		super();
 		this.code = code;
 		this.price = price;
 		this.damage = damage;

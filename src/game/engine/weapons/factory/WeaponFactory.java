@@ -10,6 +10,7 @@ public class WeaponFactory {
 	private final HashMap <Integer,WeaponRegistry> weaponShop;
 	
 	public WeaponFactory() throws IOException{
+		super();
 		weaponShop = readWeaponRegistry();
 	}
 

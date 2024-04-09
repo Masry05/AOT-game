@@ -11,6 +11,7 @@ public class TitanRegistry {
 
 	public TitanRegistry(int code, int baseHealth, int baseDamage, int heightInMeters,
 			int speed, int resourcesValue,int dangerLevel) {
+		super();
 		this.code = code;
 		this.baseHealth = baseHealth;
 		this.baseDamage = baseDamage;
