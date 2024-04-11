@@ -31,6 +31,18 @@ public class WeaponRegistry {
 		this.minRange = minRange;
 		this.maxRange = maxRange;
 	}
+	
+	public Weapon buildWeapon() {
+		Weapon weapon; 
+		switch(code) {
+			case 1:  weapon = new PiercingCannon(damage);break;
+			case 2:  weapon = new SniperCannon(damage);break;
+			case 3:  weapon = new VolleySpreadCannon(damage,minRange,maxRange);break;
+			case 4:  weapon = new WallTrap(damage);break;
+			default: weapon = null;
+		}
+		return weapon;
+	}
 	public int getCode() {
 		return code;
 	}
