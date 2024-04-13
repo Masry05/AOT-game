@@ -10,8 +10,8 @@ public class ColossalTitan extends Titan{
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,resourcesValue,dangerLevel);
 	}
 	public boolean move() {
-		setDistance(getSpeed());
-		int newSpeed=getSpeed()+1;
+		setDistance(getDistance() - getSpeed());
+		int newSpeed = getSpeed() + 1;
 		setSpeed(newSpeed);
 		return hasReachedTarget();
 		

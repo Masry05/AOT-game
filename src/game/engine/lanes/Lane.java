@@ -51,7 +51,7 @@ public class Lane implements Comparable <Lane> {
 	}
 	
 	public void moveLaneTitans() {
-		Titan [] temp = (Titan[]) titans.toArray();
+		Titan [] temp = (Titan[]) titans.toArray(); // test if they have same reference 
 		int length = titans.size();
 		for(int i=0;i<length;i++) {
 		  Titan currentTitan = titans.poll();
@@ -66,22 +66,23 @@ public class Lane implements Comparable <Lane> {
 		ArrayList<Titan>temp= new ArrayList<Titan>();
 		int length = titans.size();
 		int gatheredResources = 0;
-		for(int i=0;i<length;i++) {
+		for(int i=0; i<length && gatheredResources!=-1 ; i++) {
 		   Titan currentTitan = titans.poll();
 		   temp.add(currentTitan);
-		    if(isLaneLost()) break;
-		    else if (currentTitan.hasReachedTarget()) {
-			  gatheredResources = currentTitan.attack(laneWall);     
-			  }
+		    //if(isLaneLost()) break;
+		   if (currentTitan.hasReachedTarget()) 
+			  gatheredResources = currentTitan.attack(laneWall);     	  
 		}
-		for(int i=0;i<temp.size();i++) 
+		int len=temp.size();
+		for(int i=0;i<len;i++) 
 			titans.add(temp.get(i)) ;
 		   return gatheredResources;
 	}
 	
 	public int performLaneWeaponsAttacks() {
 		int resourcesGathered=0;
-		for(int i=0;i<weapons.size();i++) {
+		int length=weapons.size();
+		for(int i=0; i< length ;i++) {
 		Weapon currentWeapon = weapons.get(i);
 		resourcesGathered+=currentWeapon.turnAttack(titans);
 	}
