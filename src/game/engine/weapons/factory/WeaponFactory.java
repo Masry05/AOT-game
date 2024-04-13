@@ -23,11 +23,11 @@ public class WeaponFactory {
 	// do we have to remove or just get?
 	public FactoryResponse buyWeapon(int resources, int weaponCode) throws InsufficientResourcesException{
 		WeaponRegistry weapon = weaponShop.get(weaponCode);
-		int remaining = resources - weapon.getPrice();
-		if(remaining<0) {
+		int remainingResources = resources - weapon.getPrice();
+		if(remainingResources<=0) {
 			throw new InsufficientResourcesException(resources);
 		}
-		return new FactoryResponse(weapon.buildWeapon(),remaining);
+		return new FactoryResponse(weapon.buildWeapon(),remainingResources);
 		
 	}
 	

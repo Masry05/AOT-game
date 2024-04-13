@@ -15,7 +15,7 @@ public class DataLoader {
 	private static final String TITANS_FILE_NAME="titans.csv";
 	private static final String WEAPONS_FILE_NAME="weapons.csv";
 	
-	public static HashMap<Integer, TitanRegistry> readTitanRegistry() throws IOException, InvalidCSVFormat, FileNotFoundException{
+	public static HashMap<Integer, TitanRegistry> readTitanRegistry() throws IOException{
 		String data;
 	    HashMap<Integer,TitanRegistry> titans = new HashMap();
 	    
@@ -37,7 +37,7 @@ public class DataLoader {
 		  
 		 return titans;
 	}
-	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry()  throws IOException, InvalidCSVFormat, FileNotFoundException{
+	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry()  throws IOException{
 		String data;
 	    HashMap<Integer,WeaponRegistry> weapons = new HashMap();
 		BufferedReader br = new BufferedReader(new FileReader(WEAPONS_FILE_NAME));
