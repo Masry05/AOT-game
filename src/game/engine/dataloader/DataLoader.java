@@ -10,7 +10,7 @@ import game.engine.titans.TitanRegistry;
 import game.engine.weapons.WeaponRegistry;
 
 public class DataLoader {
-	
+	// throws if file not found w IOE exception and InvalidCSVFormat
 	private static final String TITANS_FILE_NAME="titans.csv";
 	private static final String WEAPONS_FILE_NAME="weapons.csv";
 	

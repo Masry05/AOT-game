@@ -23,8 +23,8 @@ public class Battle {
 	private int titanSpawnDistance;
 	private final WeaponFactory weaponFactory;
 	private final HashMap<Integer,TitanRegistry> titansArchives;
-	private final ArrayList<Titan> approachingTitans; //gets treated like a queue
-	private final PriorityQueue<Lane> lanes;
+	private final ArrayList<Titan> approachingTitans; 
+	private final PriorityQueue<Lane> lanes; //contains only active lanes
 	private final ArrayList<Lane> originalLanes;
 	
 	public Battle(int numberOfTurns,int score,int titanSpawnDistance,int initialNumOfLanes, int initialResourcesPerLane)throws IOException{

@@ -9,6 +9,9 @@ public class ArmoredTitan extends Titan {
 		super(baseHealth,baseDamage,heightInMeters,distanceFromBase,speed,
 				resourcesValue,dangerLevel);
 	}	
-	
-		
+	public  int takeDamage(int damage) {
+		setCurrentHealth(getCurrentHealth()- (1/4)*damage);
+		//can we change to double
+		return isDefeated() ? getResourcesValue() : 0;
+	}
 }
