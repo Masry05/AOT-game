@@ -1,6 +1,7 @@
 package game.engine.dataloader;
  
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -10,13 +11,14 @@ import game.engine.titans.TitanRegistry;
 import game.engine.weapons.WeaponRegistry;
 
 public class DataLoader {
-	
+	// throws if FileNotFoundException and IOE exception and InvalidCSVFormat
 	private static final String TITANS_FILE_NAME="titans.csv";
 	private static final String WEAPONS_FILE_NAME="weapons.csv";
 	
 	public static HashMap<Integer, TitanRegistry> readTitanRegistry() throws IOException{
 		String data;
 	    HashMap<Integer,TitanRegistry> titans = new HashMap();
+	    
 		BufferedReader br = new BufferedReader(new FileReader(TITANS_FILE_NAME));
 		    while ((data = br.readLine()) != null) {
 		    	String [] temp=data.split(",");
@@ -35,7 +37,7 @@ public class DataLoader {
 		  
 		 return titans;
 	}
-	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry() throws IOException{
+	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry()  throws IOException{
 		String data;
 	    HashMap<Integer,WeaponRegistry> weapons = new HashMap();
 		BufferedReader br = new BufferedReader(new FileReader(WEAPONS_FILE_NAME));
