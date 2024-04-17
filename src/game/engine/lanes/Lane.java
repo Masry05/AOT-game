@@ -2,7 +2,6 @@ package game.engine.lanes;
 
 import java.util.*;
 import game.engine.base.Wall;
-import game.engine.exceptions.InvalidLaneException;
 import game.engine.titans.Titan;
 import game.engine.weapons.Weapon;
 
@@ -51,7 +50,7 @@ public class Lane implements Comparable <Lane> {
 	}
 	
 	public void moveLaneTitans() {
-		Titan [] temp = (Titan[]) titans.toArray(); // test if they have same reference 
+		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
 		int length = titans.size();
 		for(int i=0;i<length;i++) {
 		  Titan currentTitan = titans.poll();
@@ -66,12 +65,11 @@ public class Lane implements Comparable <Lane> {
 		ArrayList<Titan>temp= new ArrayList<Titan>();
 		int length = titans.size();
 		int gatheredResources = 0;
-		for(int i=0; i<length && gatheredResources!=-1 ; i++) {
+		for(int i=0; i<length  ; i++) {
 		   Titan currentTitan = titans.poll();
 		   temp.add(currentTitan);
-		    //if(isLaneLost()) break;
 		   if (currentTitan.hasReachedTarget()) 
-			  gatheredResources = currentTitan.attack(laneWall);     	  
+			  gatheredResources += currentTitan.attack(laneWall);     	  
 		}
 		int len=temp.size();
 		for(int i=0;i<len;i++) 
@@ -91,9 +89,8 @@ public class Lane implements Comparable <Lane> {
 	
 	public void updateLaneDangerLevel() {
 		dangerLevel=0;
-		Titan [] temp = (Titan[]) titans.toArray();
-		int length = titans.size();
-		for(int i=0;i<length;i++) {
+		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
+		for(int i=0;i<temp.length;i++) {
 		  Titan currentTitan = titans.poll();
 		  dangerLevel+= currentTitan.getDangerLevel();
 		}
