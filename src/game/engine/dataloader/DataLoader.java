@@ -1,67 +1,81 @@
 package game.engine.dataloader;
- 
+
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 
 import game.engine.exceptions.InvalidCSVFormat;
 import game.engine.titans.TitanRegistry;
 import game.engine.weapons.WeaponRegistry;
 
-public class DataLoader {
-	// throws if FileNotFoundException and IOE exception and InvalidCSVFormat
-	private static final String TITANS_FILE_NAME="titans.csv";
-	private static final String WEAPONS_FILE_NAME="weapons.csv";
-	
-	public static HashMap<Integer, TitanRegistry> readTitanRegistry() throws IOException{
-		String data;
-	    HashMap<Integer,TitanRegistry> titans = new HashMap();
-	    
+public class DataLoader
+{
+	private static final String TITANS_FILE_NAME = "titans.csv";
+	private static final String WEAPONS_FILE_NAME = "weapons.csv";
+
+	public static HashMap<Integer, TitanRegistry> readTitanRegistry() throws IOException
+	{
+		HashMap<Integer, TitanRegistry> titanRegistryMap = new HashMap<>();
+
 		BufferedReader br = new BufferedReader(new FileReader(TITANS_FILE_NAME));
-		    while ((data = br.readLine()) != null) {
-		    	String [] temp=data.split(",");
-		    	if (temp.length != 7)
-				{
-					throw new InvalidCSVFormat(data);
-				}
-		    	TitanRegistry titan = new TitanRegistry(Integer.parseInt(temp[0])
-		    		   ,Integer.parseInt(temp[1]),Integer.parseInt(temp[2])
-		    		   ,Integer.parseInt(temp[3]),Integer.parseInt(temp[4])
-		    		   ,Integer.parseInt(temp[5]),Integer.parseInt(temp[6]));
-		        titans.put(titan.getCode(), titan);
-		    }
-		    
-		    br.close();
-		  
-		 return titans;
-	}
-	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry()  throws IOException{
-		String data;
-	    HashMap<Integer,WeaponRegistry> weapons = new HashMap();
-		BufferedReader br = new BufferedReader(new FileReader(WEAPONS_FILE_NAME));
-		    while ((data = br.readLine()) != null) {
-		    	String [] temp=data.split(",");
-		    	WeaponRegistry weapon=null;
-		    	switch(temp.length) {
-		    	
-		    	//case 2: weapon = new WeaponRegistry(Integer.parseInt(temp[0]),Integer.parseInt(temp[1]));break;
-			        
-		    	case 4 : weapon = new WeaponRegistry(Integer.parseInt(temp[0]),Integer.parseInt(temp[1])
-		    			,Integer.parseInt(temp[2]),temp[3]);break;
-		    			
-		    	case 6 : weapon = new WeaponRegistry(Integer.parseInt(temp[0]),Integer.parseInt(temp[1])
-		    			,Integer.parseInt(temp[2]),temp[3],Integer.parseInt(temp[4]),Integer.parseInt(temp[5]));break;
-		    			
-		    	default: throw new InvalidCSVFormat(data);
-			    }
-		    	
-		    	weapons.put(Integer.parseInt(temp[0]), weapon);
-		    }
-		    
+
+		while (br.ready())
+		{
+			String nextLine = br.readLine();
+			String[] data = nextLine.split(",");
+
+			if (data.length != 7)
+			{
+				throw new InvalidCSVFormat(nextLine);
+			}
+
+			TitanRegistry reg = new TitanRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+					Integer.parseInt(data[2]), Integer.parseInt(data[3]), Integer.parseInt(data[4]),
+					Integer.parseInt(data[5]), Integer.parseInt(data[6]));
+
+			titanRegistryMap.put(reg.getCode(), reg);
+		}
+
 		br.close();
-		return weapons;
-		
+
+		return titanRegistryMap;
 	}
+
+	public static HashMap<Integer, WeaponRegistry> readWeaponRegistry() throws IOException
+	{
+		HashMap<Integer, WeaponRegistry> weaponRegistryMap = new HashMap<>();
+
+		BufferedReader br = new BufferedReader(new FileReader(WEAPONS_FILE_NAME));
+
+		while (br.ready())
+		{
+			String nextLine = br.readLine();
+			String[] data = nextLine.split(",");
+
+			WeaponRegistry reg;
+
+			if (data.length != 6 && data.length != 4)
+			{
+				throw new InvalidCSVFormat(nextLine);
+			}
+
+			if (data.length == 6)
+			{
+				reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+						Integer.parseInt(data[2]), data[3], Integer.parseInt(data[4]), Integer.parseInt(data[5]));
+			} else
+			{
+				reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+						Integer.parseInt(data[2]), data[3]);
+			}
+
+			weaponRegistryMap.put(reg.getCode(), reg);
+		}
+
+		br.close();
+
+		return weaponRegistryMap;
+	}
+
 }
