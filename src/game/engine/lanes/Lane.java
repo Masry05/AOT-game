@@ -51,8 +51,7 @@ public class Lane implements Comparable <Lane> {
 	
 	public void moveLaneTitans() {
 		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
-		int length = titans.size();
-		for(int i=0;i<length;i++) {
+		while(!titans.isEmpty()) {
 		  Titan currentTitan = titans.poll();
 		  if(!(currentTitan.hasReachedTarget()))
 			  currentTitan.move();
@@ -63,9 +62,8 @@ public class Lane implements Comparable <Lane> {
 	
 	public int performLaneTitansAttacks (){
 		ArrayList<Titan>temp= new ArrayList<Titan>();
-		int length = titans.size();
 		int gatheredResources = 0;
-		for(int i=0; i<length  ; i++) {
+		while (!titans.isEmpty()) {
 		   Titan currentTitan = titans.poll();
 		   temp.add(currentTitan);
 		   if (currentTitan.hasReachedTarget()) 
@@ -90,7 +88,7 @@ public class Lane implements Comparable <Lane> {
 	public void updateLaneDangerLevel() {
 		dangerLevel=0;
 		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
-		for(int i=0;i<temp.length;i++) {
+		while(!titans.isEmpty()){
 		  Titan currentTitan = titans.poll();
 		  dangerLevel+= currentTitan.getDangerLevel();
 		}
