@@ -50,18 +50,18 @@ public class Lane implements Comparable <Lane> {
 	}
 	
 	public void moveLaneTitans() {
-		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
-		while(!titans.isEmpty()) {
+		Queue<Titan> temp = new LinkedList<Titan>();
+ 		while(!titans.isEmpty()) {
 		  Titan currentTitan = titans.poll();
 		  if(!(currentTitan.hasReachedTarget()))
 			  currentTitan.move();
+		  temp.add(currentTitan);
 		}
-		for(int i=0;i<temp.length;i++) 
-			titans.add(temp[i]) ;
+		titans.addAll(temp);
      }
 	
 	public int performLaneTitansAttacks (){
-		ArrayList<Titan>temp= new ArrayList<Titan>();
+		Queue<Titan> temp = new LinkedList<Titan>();
 		int gatheredResources = 0;
 		while (!titans.isEmpty()) {
 		   Titan currentTitan = titans.poll();
@@ -69,9 +69,7 @@ public class Lane implements Comparable <Lane> {
 		   if (currentTitan.hasReachedTarget()) 
 			  gatheredResources += currentTitan.attack(laneWall);     	  
 		}
-		int len=temp.size();
-		for(int i=0;i<len;i++) 
-			titans.add(temp.get(i)) ;
+		titans.addAll(temp);
 		   return gatheredResources;
 	}
 	
@@ -86,13 +84,13 @@ public class Lane implements Comparable <Lane> {
 	}
 	
 	public void updateLaneDangerLevel() {
+		Queue<Titan> temp = new LinkedList<Titan>();
 		dangerLevel=0;
-		Titan [] temp = titans.toArray(new Titan [titans.size()]); 
 		while(!titans.isEmpty()){
 		  Titan currentTitan = titans.poll();
 		  dangerLevel+= currentTitan.getDangerLevel();
+		  temp.add(currentTitan);
 		}
-		for(int i=0;i<temp.length;i++) 
-			titans.add(temp[i]) ;
+		titans.addAll(temp);
 	 }
 }

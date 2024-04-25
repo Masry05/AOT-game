@@ -1,6 +1,6 @@
 package game.engine.weapons;
 
-import java.util.PriorityQueue;
+import java.util.*;
 
 import game.engine.titans.Titan;
 
@@ -16,7 +16,7 @@ public class SniperCannon extends Weapon{
 		int resources = 0;
 		if(!laneTitans.isEmpty()) {
 			Titan titan = laneTitans.poll();
-			resources += attack(titan);
+			resources = attack(titan);
 			if(!titan.isDefeated())
 				laneTitans.add(titan);
 		}

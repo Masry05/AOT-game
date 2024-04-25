@@ -4,7 +4,7 @@ import game.engine.interfaces.Attackee;
 import game.engine.interfaces.Attacker;
 import game.engine.interfaces.Mobil;
 
-public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attackee {
+public abstract class Titan implements Comparable <Titan> , Mobil , Attacker , Attackee {
 	
 	private final int baseHealth;
 	private int currentHealth;
@@ -53,7 +53,7 @@ public abstract class Titan implements Comparable <Titan>,Mobil,Attacker,Attacke
 	}
 
 	public void setDistance(int distance) {
-		this.distanceFromBase = distance>0? distance : 0;
+		this.distanceFromBase = distance > 0 ? distance : 0;
 	}
 
 	public int getSpeed() {

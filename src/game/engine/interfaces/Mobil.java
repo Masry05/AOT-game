@@ -15,6 +15,4 @@ public interface Mobil {
 		setDistance(getDistance() - getSpeed());
 		return hasReachedTarget();
 	}
-	
-	
 }

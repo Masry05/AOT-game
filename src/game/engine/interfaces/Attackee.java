@@ -13,7 +13,7 @@ public interface Attackee {
 	}
 	
 	default int takeDamage(int damage) {
-		setCurrentHealth(getCurrentHealth()- damage);
+		setCurrentHealth(getCurrentHealth() - damage);
 		return isDefeated() ? getResourcesValue() : 0;
 	}
 }

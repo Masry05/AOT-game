@@ -54,22 +54,14 @@ public class DataLoader
 			String[] data = nextLine.split(",");
 
 			WeaponRegistry reg;
-
-			if (data.length != 6 && data.length != 4)
-			{
-				throw new InvalidCSVFormat(nextLine);
+			
+			switch(data.length) {
+				case 4: reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+						Integer.parseInt(data[2]), data[3]);break;
+				case 6: reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
+						Integer.parseInt(data[2]), data[3], Integer.parseInt(data[4]), Integer.parseInt(data[5]));break;
+				default: throw new InvalidCSVFormat(nextLine);
 			}
-
-			if (data.length == 6)
-			{
-				reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
-						Integer.parseInt(data[2]), data[3], Integer.parseInt(data[4]), Integer.parseInt(data[5]));
-			} else
-			{
-				reg = new WeaponRegistry(Integer.parseInt(data[0]), Integer.parseInt(data[1]),
-						Integer.parseInt(data[2]), data[3]);
-			}
-
 			weaponRegistryMap.put(reg.getCode(), reg);
 		}
 

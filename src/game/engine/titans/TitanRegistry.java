@@ -21,21 +21,6 @@ public class TitanRegistry {
 		this.dangerLevel = dangerLevel;
 	}
 
-	public Titan spawnTitan(int distanceFromBase) {
-		Titan titan;
-		switch(code) {
-			case 1:  titan = new PureTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
-					,speed,resourcesValue,dangerLevel);break;
-			case 2:  titan = new AbnormalTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
-					,speed,resourcesValue,dangerLevel);break;
-			case 3:  titan = new ArmoredTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
-					,speed,resourcesValue,dangerLevel);break;
-			case 4:  titan = new ColossalTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
-					,speed,resourcesValue,dangerLevel);break;
-			default: titan = null;
-		}
-		return titan;
-	}
 	public int getCode() {
 		return code;
 	}
@@ -62,6 +47,22 @@ public class TitanRegistry {
 
 	public int getDangerLevel() {
 		return dangerLevel;
+	}
+
+	public Titan spawnTitan(int distanceFromBase) {
+		Titan titan;
+		switch(code) {
+			case 1:  titan = new PureTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
+					,speed,resourcesValue,dangerLevel);break;
+			case 2:  titan = new AbnormalTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
+					,speed,resourcesValue,dangerLevel);break;
+			case 3:  titan = new ArmoredTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
+					,speed,resourcesValue,dangerLevel);break;
+			case 4:  titan = new ColossalTitan(baseHealth,baseDamage,heightInMeters,distanceFromBase
+					,speed,resourcesValue,dangerLevel);break;
+			default: titan = null;
+		}
+		return titan;
 	}
 	
 }
