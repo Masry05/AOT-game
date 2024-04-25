@@ -145,37 +145,43 @@ public class Battle {
 	}
 	
 	private void addTurnTitansToLane() {
-		Lane currentLane= lanes.peek();
-		for(int i=0; i<numberOfTitansPerTurn; i++) {
-			if(approachingTitans.isEmpty())
-				refillApproachingTitans();
-			currentLane.addTitan(approachingTitans.remove(0));			
+		if(!lanes.isEmpty()) {
+			Lane currentLane= lanes.peek();
+			for(int i=0; i<numberOfTitansPerTurn; i++) {
+				if(approachingTitans.isEmpty())
+					refillApproachingTitans();
+				currentLane.addTitan(approachingTitans.remove(0));		
+			}
 		}
 	}
 	
 	private void moveTitans() {
-		Lane [] temp  = lanes.toArray(new Lane [lanes.size()]);
-		while(!lanes.isEmpty())
-			lanes.poll().moveLaneTitans();
-		for(int i=0;i<temp.length;i++)
-			lanes.add(temp[i]);
+		Queue<Lane> temp = new LinkedList<Lane>();	
+		while(!lanes.isEmpty()) {
+			Lane currentLane= lanes.poll();
+			currentLane.moveLaneTitans();
+			temp.add(currentLane);
+		}
+		lanes.addAll(temp);
 	}
 	
 	private int performWeaponsAttacks() {
+		Queue<Lane> temp = new LinkedList<Lane>();	
 		int totalResources=0;
-		Lane [] temp  = lanes.toArray(new Lane [lanes.size()]);
-		while(!lanes.isEmpty())
-			totalResources+= lanes.poll().performLaneWeaponsAttacks();
-		for(int i=0;i<temp.length;i++)
-			lanes.add(temp[i]);
+		while(!lanes.isEmpty()) {
+			Lane currentLane= lanes.poll();
+			totalResources+= currentLane.performLaneWeaponsAttacks();
+			temp.add(currentLane);
+		}
+		lanes.addAll(temp);
 		score+=totalResources;
 		resourcesGathered += totalResources;
 		return totalResources;
 	}
 	
 	private int performTitansAttacks() {
+		Queue<Lane> temp = new LinkedList<Lane>();	
 		int totalResources=0;
-		PriorityQueue<Lane> temp  =new PriorityQueue<Lane>();
 		while(!lanes.isEmpty()) {
 			Lane currentLane= lanes.poll();
 			int gathered=currentLane.performLaneTitansAttacks();
@@ -183,17 +189,18 @@ public class Battle {
 			if(gathered>=0)
 				temp.add(currentLane);
 		}
-		while(!temp.isEmpty())
-			lanes.add(temp.poll());
+		lanes.addAll(temp);
 		return totalResources;
 	}
 	
 	private void updateLanesDangerLevels() {
-		Lane [] temp  = lanes.toArray(new Lane [lanes.size()]);
-		while(!lanes.isEmpty()) 
-			lanes.poll().updateLaneDangerLevel();
-		for(int i=0;i<temp.length;i++)
-			lanes.add(temp[i]);
+		Queue<Lane> temp = new LinkedList<Lane>();	
+		while(!lanes.isEmpty()) {
+			Lane currentLane= lanes.poll();
+			currentLane.updateLaneDangerLevel();
+			temp.add(currentLane);
+		}
+		lanes.addAll(temp);
 	}
 	
 	private void finalizeTurns() {

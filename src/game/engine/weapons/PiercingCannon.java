@@ -13,8 +13,8 @@ public class PiercingCannon extends Weapon {
 	}
 
 	public int turnAttack(PriorityQueue<Titan> laneTitans) {
-		int resources = 0;
 		PriorityQueue<Titan> temp = new PriorityQueue<Titan>();
+		int resources = 0;
 		for(int i=0;i<5 && !laneTitans.isEmpty();i++) {
 			Titan titan = laneTitans.poll();
 			resources += attack(titan);
