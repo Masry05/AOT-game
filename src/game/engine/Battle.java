@@ -158,7 +158,7 @@ public class Battle {
 	private void moveTitans() {
 		Queue<Lane> temp = new LinkedList<Lane>();	
 		while(!lanes.isEmpty()) {
-			Lane currentLane= lanes.poll();
+			Lane currentLane = lanes.poll();
 			currentLane.moveLaneTitans();
 			temp.add(currentLane);
 		}
@@ -167,10 +167,10 @@ public class Battle {
 	
 	private int performWeaponsAttacks() {
 		Queue<Lane> temp = new LinkedList<Lane>();	
-		int totalResources=0;
+		int totalResources = 0;
 		while(!lanes.isEmpty()) {
-			Lane currentLane= lanes.poll();
-			totalResources+= currentLane.performLaneWeaponsAttacks();
+			Lane currentLane = lanes.poll();
+			totalResources += currentLane.performLaneWeaponsAttacks();
 			temp.add(currentLane);
 		}
 		lanes.addAll(temp);
@@ -183,10 +183,10 @@ public class Battle {
 		Queue<Lane> temp = new LinkedList<Lane>();	
 		int totalResources=0;
 		while(!lanes.isEmpty()) {
-			Lane currentLane= lanes.poll();
-			int gathered=currentLane.performLaneTitansAttacks();
-			totalResources+=gathered;
-			if(gathered>=0)
+			Lane currentLane = lanes.poll();
+			int gathered = currentLane.performLaneTitansAttacks();
+			totalResources += gathered;
+			if(gathered == 0)
 				temp.add(currentLane);
 		}
 		lanes.addAll(temp);
@@ -196,7 +196,7 @@ public class Battle {
 	private void updateLanesDangerLevels() {
 		Queue<Lane> temp = new LinkedList<Lane>();	
 		while(!lanes.isEmpty()) {
-			Lane currentLane= lanes.poll();
+			Lane currentLane = lanes.poll();
 			currentLane.updateLaneDangerLevel();
 			temp.add(currentLane);
 		}

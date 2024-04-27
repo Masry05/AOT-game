@@ -65,22 +65,22 @@ public class Lane implements Comparable <Lane> {
 		int gatheredResources = 0;
 		while (!titans.isEmpty()) {
 		   Titan currentTitan = titans.poll();
-		   temp.add(currentTitan);
 		   if (currentTitan.hasReachedTarget()) 
-			  gatheredResources += currentTitan.attack(laneWall);     	  
+			  gatheredResources += currentTitan.attack(laneWall);  
+		   temp.add(currentTitan);
 		}
 		titans.addAll(temp);
 		   return gatheredResources;
 	}
 	
 	public int performLaneWeaponsAttacks() {
-		int resourcesGathered=0;
+		int gatheredResources = 0;
 		int length=weapons.size();
 		for(int i=0; i< length ;i++) {
 		Weapon currentWeapon = weapons.get(i);
-		resourcesGathered+=currentWeapon.turnAttack(titans);
+		gatheredResources += currentWeapon.turnAttack(titans);
 	}
-		return resourcesGathered;
+		return gatheredResources;
 	}
 	
 	public void updateLaneDangerLevel() {

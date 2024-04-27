@@ -1,7 +1,10 @@
 package game.engine.weapons;
 
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
+import game.engine.lanes.Lane;
 import game.engine.titans.Titan;
 
 public class VolleySpreadCannon extends Weapon {
@@ -26,7 +29,7 @@ public class VolleySpreadCannon extends Weapon {
 	
 	public int turnAttack(PriorityQueue<Titan> laneTitans) {
 		int resources = 0;
-		PriorityQueue<Titan> temp = new PriorityQueue<>();
+		Queue<Titan> temp = new LinkedList<Titan>();
 		while(!laneTitans.isEmpty() && laneTitans.peek().getDistance() <= maxRange) {
 			Titan titan = laneTitans.poll();
 			if( minRange <= titan.getDistance())
@@ -34,8 +37,7 @@ public class VolleySpreadCannon extends Weapon {
 			if(!titan.isDefeated())
 				temp.add(titan);
 		}
-		while(!temp.isEmpty())
-			laneTitans.add(temp.poll());
+			laneTitans.addAll(temp);
 		return resources;
 	}
 }
