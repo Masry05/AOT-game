@@ -1,7 +1,8 @@
 package game.engine.weapons;
 
-import java.util.PriorityQueue;
+import java.util.*;
 
+import game.engine.lanes.Lane;
 import game.engine.titans.Titan;
 
 public class PiercingCannon extends Weapon {
@@ -13,7 +14,7 @@ public class PiercingCannon extends Weapon {
 	}
 
 	public int turnAttack(PriorityQueue<Titan> laneTitans) {
-		PriorityQueue<Titan> temp = new PriorityQueue<Titan>();
+		Queue<Titan> temp = new LinkedList<Titan>();
 		int resources = 0;
 		for(int i=0;i<5 && !laneTitans.isEmpty();i++) {
 			Titan titan = laneTitans.poll();
@@ -21,8 +22,7 @@ public class PiercingCannon extends Weapon {
 			if(!titan.isDefeated())
 				temp.add(titan);
 		}
-		while(!temp.isEmpty())
-			laneTitans.add(temp.poll());
+			laneTitans.addAll(temp);
 		return resources;
 	}
 	
