@@ -1,0 +1,46 @@
+#optionsVbox{
+	
+	-fx-background-radius: 20; 
+	-fx-background-color:#e2e0e2;
+}
+#mode{
+  -fx-text-fill: #a6170e;
+  -fx-font-family: "Arial Narrow";
+  -fx-font-weight: bold;
+  -fx-border-color:#800000;
+  -fx-border-radius: 20; 
+  -fx-border-width: 2px;
+  -fx-background-color:null;
+}
+#mode:hover {
+ -fx-background-radius: 20; 
+ -fx-background-color:#a6170e;
+ -fx-text-fill:white;
+ -fx-font-weight:bold; 
+}
+#startButton,#instructionButton,#titanArchiveButton{
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0,0 0 6 0,0 0 7 0;
+    -fx-background-radius: 8;
+    -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #800000 0%, #a34313 50%, #903b12 100%)
+            radial-gradient(center 50% 50%, radius 100%,#d96e3a,#c54e2c);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 5, 0, 0, 2);
+    -fx-font-weight: bold;
+    -fx-font-size: 1.1em;
+    -fx-text-fill: white;
+}
+
+#startButton:hover,#instructionButton:hover,#titanArchiveButton:hover
+{
+      -fx-background-color:
+            linear-gradient(from 0% 93% to 0% 100%, #800000 0%, #a34313 50%, #903b12 100%)
+            radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
+}
+
+#startButton:pressed,#instructionButton:pressed,#titanArchiveButton:pressed
+{
+     -fx-padding: 10 15 13 15;
+     -fx-background-insets: 2 0 0 0,2 0 3 0,2 0 4 0,2 0 5 0;
+
+}
