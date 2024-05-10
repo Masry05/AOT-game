@@ -17,7 +17,7 @@
                <children>
                   <ImageView fitHeight="237.0" fitWidth="540.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../Desktop/title.png" />
+                        <Image url="@../../../images/logo.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -43,7 +43,7 @@
                         </VBox>
                         <ImageView fitHeight="218.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../../../../Desktop/clossal_2-removebg.png" />
+                              <Image url="@../../../images/homepagetitan.png" />
                            </image>
                            <cursor>
                               <Cursor fx:constant="HAND" />

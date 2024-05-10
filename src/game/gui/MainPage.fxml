@@ -12,7 +12,7 @@
 
 <BorderPane id="gameScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="824.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gui.MainPageController">
    <top>
-      <HBox id="HUD" prefHeight="42.0" prefWidth="824.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="HUD" prefHeight="42.0" prefWidth="824.0" BorderPane.alignment="CENTER">
          <children>
             <HBox id="resources" prefHeight="42.0" prefWidth="266.0">
                <children>
@@ -35,16 +35,15 @@
       </HBox>
    </top>
    <bottom>
-      <HBox id="turns" prefHeight="37.0" prefWidth="1375.0" BorderPane.alignment="CENTER" />
+      <HBox fx:id="turns" prefHeight="37.0" prefWidth="1375.0" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <VBox id="dangerLevel" prefHeight="325.0" prefWidth="111.0" BorderPane.alignment="CENTER" />
+      <VBox fx:id="dangerLevel" prefHeight="325.0" prefWidth="111.0" BorderPane.alignment="CENTER" />
    </right>
    <left>
       <ListView fx:id="weaponShop" prefHeight="463.0" prefWidth="161.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
-      <ListView id="lanes" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="lanes" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
-

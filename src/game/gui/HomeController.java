@@ -1,6 +1,5 @@
 package game.gui;
 
-import java.awt.Desktop.Action;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,12 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -32,8 +27,6 @@ public class HomeController implements Initializable{
 	    public Button instructionButton;
 	    public Button titanArchiveButton;
 	    public Button instructionExit;
-	    public MediaView media;
-	    public MediaPlayer mediaPlayer;
 	    public VBox optionsVbox;
 	    @Override
 		public void initialize(URL arg0, ResourceBundle arg1) {
@@ -49,15 +42,18 @@ public class HomeController implements Initializable{
 	            easy.setPrefHeight(30);
 	            easy.setPrefWidth(100);
                 easy.setOnAction(e -> {
+                	Button clicked = (Button) event.getSource();
+                	double height = clicked.getScene().getHeight();
+				    double width = clicked.getScene().getWidth();
+				    Stage window = (Stage) clicked.getScene().getWindow();
 				try {
-					Parent root = FXMLLoader.load(getClass().getResource("EasyMode.fxml"));
-					Button easyClicked = (Button) event.getSource();
-				    double height = easyClicked.getScene().getHeight();
-				    double width = easyClicked.getScene().getWidth();
-					Scene easyMode = new Scene (root, width, height);
-					Stage window = (Stage) easyClicked.getScene().getWindow();
-					window.setScene(easyMode);
+					MainPageController s = new MainPageController(3, 250, height, width);
+					window.setScene(s.getGame());
+					
 				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -67,15 +63,17 @@ public class HomeController implements Initializable{
 	            hard.setPrefHeight(30);
 	            hard.setPrefWidth(100);
 	            hard.setOnAction(e -> {
+	            	Button clicked = (Button) event.getSource();
+                	double height = clicked.getScene().getHeight();
+				    double width = clicked.getScene().getWidth();
+				    Stage window = (Stage) clicked.getScene().getWindow();
 					try {
-						Parent root = FXMLLoader.load(getClass().getResource("EasyMode.fxml"));
-						Button hardClicked = (Button) event.getSource();
-					    double height = hardClicked.getScene().getHeight();
-					    double width = hardClicked.getScene().getWidth();
-						Scene hardMode = new Scene (root, width, height);
-						Stage window = (Stage) hardClicked.getScene().getWindow();
-						window.setScene(hardMode);
+						MainPageController s = new MainPageController(5, 125, height, width);
+						window.setScene(s.getGame());
 					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
