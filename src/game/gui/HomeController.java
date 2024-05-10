@@ -68,7 +68,7 @@ public class HomeController implements Initializable{
 	            hard.setPrefWidth(100);
 	            hard.setOnAction(e -> {
 					try {
-						Parent root = FXMLLoader.load(getClass().getResource("HardMode.fxml"));
+						Parent root = FXMLLoader.load(getClass().getResource("EasyMode.fxml"));
 						Button hardClicked = (Button) event.getSource();
 					    double height = hardClicked.getScene().getHeight();
 					    double width = hardClicked.getScene().getWidth();
