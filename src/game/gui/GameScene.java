@@ -56,6 +56,8 @@ public class GameScene {
 			}
 			Image image = new Image(new FileInputStream("images"+File.separator+fileName+".png"));
 	        ImageView imageView = new ImageView(image);
+	        imageView.setFitWidth(100);
+	        imageView.setFitHeight(100);
 			Text name = new Text(weapon.getName());
 			Text price = new Text(weapon.getPrice()+"");
 			temp.getChildren().addAll(imageView,name,price);
@@ -102,6 +104,7 @@ public class GameScene {
 	        weapons.add(volleySpreadCannon, 0, 2);
 	        weapons.add(wallTrap, 0, 3);
 	        GridPane lane = new GridPane();
+	        wall.getChildren().addAll(lanes);
 	        lanes.add(wall);
 			}
 		return lanes;
