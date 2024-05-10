@@ -24,6 +24,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class HomeController implements Initializable{
 	   @FXML
@@ -93,16 +94,16 @@ public class HomeController implements Initializable{
 	            }
 	        }
 	    public void handleInstructionExit(ActionEvent event) {
-	    	System.out.println("reached");
-	    	Button clickedButton = (Button) event.getSource();//this is not working
+	    	Button clickedButton = (Button) event.getSource();
 	    	 if (clickedButton == instructionExit) {
 	    		 Stage currStage = (Stage) instructionExit.getScene().getWindow();
 	    		 currStage.close();
-	    	 }
+	    	 }// want it to be scrollable idk why not working
 	    }
 	    public void handleInstructionButtonClick() {
 	            Stage popupStage = new Stage();
 	            popupStage.initModality(Modality.APPLICATION_MODAL);
+	            popupStage.initStyle(StageStyle.UNDECORATED);
 	            Parent root;
 				try {
 					root = FXMLLoader.load(getClass().getResource("InstructionPopup.fxml"));
