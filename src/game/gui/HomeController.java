@@ -1,6 +1,5 @@
 package game.gui;
 
-//import java.awt.Button;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,14 +14,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
-//import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-
+import javafx.stage.StageStyle;
 
 public class HomeController implements Initializable{
 	   @FXML
@@ -30,16 +27,14 @@ public class HomeController implements Initializable{
 	    public Button instructionButton;
 	    public Button titanArchiveButton;
 	    public Button instructionExit;
-	    //public MediaView media;
-	    public MediaPlayer mediaPlayer;
 	    public VBox optionsVbox;
 	    @Override
 		public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		}
+	}
 	    @FXML
 	    public void handleStartButtonClick(ActionEvent event) {
-	        	
+	        // Get the button that was clicked
 	            ObservableList<Node> children=optionsVbox.getChildren();
 	            if(children.size() == 3) {
 	            Button easy = new Button("Easy");
@@ -47,15 +42,18 @@ public class HomeController implements Initializable{
 	            easy.setPrefHeight(30);
 	            easy.setPrefWidth(100);
                 easy.setOnAction(e -> {
+                	Button clicked = (Button) event.getSource();
+                	double height = clicked.getScene().getHeight();
+				    double width = clicked.getScene().getWidth();
+				    Stage window = (Stage) clicked.getScene().getWindow();
 				try {
-					Parent root = FXMLLoader.load(getClass().getResource("EasyMode.fxml"));
-					Button easyClicked = (Button) event.getSource();
-				    double height = easyClicked.getScene().getHeight();
-				    double width = easyClicked.getScene().getWidth();
-					Scene easyMode = new Scene (root, width, height);
-					Stage window = (Stage) easyClicked.getScene().getWindow();
-					window.setScene(easyMode);
+					MainPageController s = new MainPageController(3, 250, height, width);
+					window.setScene(s.getGame());
+					
 				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -65,15 +63,17 @@ public class HomeController implements Initializable{
 	            hard.setPrefHeight(30);
 	            hard.setPrefWidth(100);
 	            hard.setOnAction(e -> {
+	            	Button clicked = (Button) event.getSource();
+                	double height = clicked.getScene().getHeight();
+				    double width = clicked.getScene().getWidth();
+				    Stage window = (Stage) clicked.getScene().getWindow();
 					try {
-						Parent root = FXMLLoader.load(getClass().getResource("HardMode.fxml"));
-						Button hardClicked = (Button) event.getSource();
-					    double height = hardClicked.getScene().getHeight();
-					    double width = hardClicked.getScene().getWidth();
-						Scene hardMode = new Scene (root, width, height);
-						Stage window = (Stage) hardClicked.getScene().getWindow();
-						window.setScene(hardMode);
+						MainPageController s = new MainPageController(5, 125, height, width);
+						window.setScene(s.getGame());
 					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
@@ -83,8 +83,8 @@ public class HomeController implements Initializable{
                 modes.setPadding(new Insets(5,5,5,5));
                 modes.setSpacing(25);
                 modes.setAlignment(Pos.CENTER);
-                Button instructions = (Button) (optionsVbox.getChildren().remove(1));
-                Button titanArchive = (Button) (optionsVbox.getChildren().remove(1));
+                Button instructions = (Button)optionsVbox.getChildren().remove(1);
+                Button titanArchive = (Button)optionsVbox.getChildren().remove(1);
                 optionsVbox.getChildren().addAll(modes, instructions, titanArchive);
 	            }
 	            else {
@@ -92,16 +92,16 @@ public class HomeController implements Initializable{
 	            }
 	        }
 	    public void handleInstructionExit(ActionEvent event) {
-	    	System.out.println("reached");
-	    	Button clickedButton = (Button) event.getSource();//this is not working
+	    	Button clickedButton = (Button) event.getSource();
 	    	 if (clickedButton == instructionExit) {
 	    		 Stage currStage = (Stage) instructionExit.getScene().getWindow();
 	    		 currStage.close();
-	    	 }
+	    	 }// want it to be scrollable idk why not working
 	    }
 	    public void handleInstructionButtonClick() {
 	            Stage popupStage = new Stage();
 	            popupStage.initModality(Modality.APPLICATION_MODAL);
+	            popupStage.initStyle(StageStyle.UNDECORATED);
 	            Parent root;
 				try {
 					root = FXMLLoader.load(getClass().getResource("InstructionPopup.fxml"));

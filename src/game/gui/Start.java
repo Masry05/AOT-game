@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Start extends Application {
 	Stage window;
     @Override
     public void start(Stage primaryStage) {
@@ -17,7 +17,7 @@ public class Main extends Application {
     	Scene s;
 		try {
 			root = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-		    s = new Scene (root,1000,800);
+	        s = new Scene (root,1000,800);
 		    window.setScene(s);
 	    	window.show();
 		} catch (IOException e) {
