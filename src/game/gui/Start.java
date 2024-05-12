@@ -17,7 +17,7 @@ public class Start extends Application {
     	Scene s;
 		try {
 			root = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-	        s = new Scene (root,1000,800);
+	        s = new Scene (root,800,1000);
 		    window.setScene(s);
 	    	window.show();
 		} catch (IOException e) {
