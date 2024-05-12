@@ -34,27 +34,26 @@ public class MainPageController {
 	
 	private Scene game;	
 	private Battle battle;
-	public VBox dangerLevel;
-	public HBox turns; 
-	public HBox HUD;
+	private BorderPane layout;
 	public MainPageController() throws Exception{
 		
 	}
 
 	public MainPageController(int numOfLanes, int resources, double width , double height) throws Exception{
 		this.battle = new Battle(1, 0, 10, numOfLanes, resources);
-		BorderPane layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+		layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
 		ObservableList<VBox> weapons = weaponShopBuilder();
 		ListView<VBox> weaponShop = (ListView<VBox>) layout.lookup("#weaponShop");
 		weaponShop.setItems(weapons);
 		ListView<HBox> lanes = (ListView<HBox>) layout.lookup("#lanes");
-		ObservableList<HBox> lane = lanesBuilder(battle);
+		ObservableList<HBox> lane = lanesBuilder();
 		ObservableList <ImageView> approachingTitans =  updateApproachingTitans();
 		HBox titanImages = (HBox)layout.lookup("#titanImages");
 		titanImages.getChildren().addAll(updateApproachingTitans());
 		titanImages.setSpacing(10);
-			
 		lanes.setItems(lane);
+		updateResources();
+		updateScore();
 		game = new Scene(layout ,width , height);	
 	}
 	
@@ -78,8 +77,8 @@ public class MainPageController {
 				default:imageView = null;
 						range = "Error while getting the range";
 			}
-	        imageView.setFitWidth(100);
-	        imageView.setFitHeight(100);
+	        imageView.setFitWidth(130);
+	        imageView.setFitHeight(130);
 			Text name = new Text(weapon.getName());
 			Text price = new Text("Price: " + weapon.getPrice());
 			temp.getChildren().addAll(imageView,name,price);
@@ -91,14 +90,27 @@ public class MainPageController {
 		}
 		 return weapons;
 	}
-	private ObservableList<HBox> lanesBuilder(Battle battle) throws FileNotFoundException {
+	private ObservableList<HBox> lanesBuilder() throws FileNotFoundException {
 		ObservableList<HBox> lanes = FXCollections.observableArrayList();
 		ArrayList<Lane> originalLanes = battle.getOriginalLanes();
 		HashMap<Integer,WeaponRegistry> shop = this.battle.getWeaponFactory().getWeaponShop();
+		int heightPerLane = 0;
+		int imageSize = 0;
+		int wallLength = 0;
+		if(battle.getOriginalLanes().size()==3) {
+			heightPerLane = (int) (700/3);
+			imageSize = (int)(heightPerLane/4)-22;
+			wallLength = heightPerLane-14;
+		}
+		else {
+			heightPerLane = (int) (700/5);
+			imageSize = (int)(heightPerLane/4)-22;
+			wallLength = heightPerLane-22;
+		}
+		
 		for(int i = 0;i<originalLanes.size();i++) {
 			HBox wall = new HBox();
 			GridPane weapons = new GridPane();
-			
 			for(int j=1;j <= shop.size();j++) {
 				VBox temp = new VBox();
 				WeaponRegistry weapon = shop.get(i);
@@ -114,25 +126,34 @@ public class MainPageController {
 				ImageView image = new ImageView(new Image(new FileInputStream("images"+File.separator+fileName+".png")));
 		        Label amount = new Label("X0");
 		        amount.setAlignment(Pos.BASELINE_RIGHT);
-		        image.setFitWidth(20);
-		        image.setFitHeight(20);
+		        image.setFitWidth(imageSize);
+		        image.setFitHeight(imageSize);
 		        temp.getChildren().addAll(image,amount);
+		        Insets margin = new Insets(0, 0, 10, 5);
+		        VBox.setMargin(wall, margin);
 		        weapons.add(temp, 0, j-1);
 			}
-			VBox Wall = new VBox();
-			ImageView image = new ImageView(new Image(new FileInputStream("images"+File.separator+"Wall.png")));
-			image.setFitWidth(30);
-	        image.setFitHeight(100);
+			VBox wallWeaponsHealth = new VBox();
+			Rectangle wallShape = new Rectangle(50,wallLength);
+			wallShape.setFill(Color.GREY);
+			//ImageView image = new ImageView(new Image(new FileInputStream("images"+File.separator+"Wall.png")));
 			GridPane healthBar = new GridPane();
 	        int numCols = 10;
 	        for (int j = 0; j < numCols; j++) {
-	            Rectangle rect = new Rectangle(10, 10);
+	            Rectangle rect = new Rectangle(9 ,5);
 	            rect.setFill(Color.GREEN);
 	            healthBar.add(rect, j, 0);
 	        }
-	        Wall.getChildren().addAll(image,healthBar);
+	        HBox wallWeapons = new HBox();
+	        wallWeapons.setSpacing(5);
+	        wallWeapons.getChildren().addAll(wallShape,weapons);
+	        wallWeaponsHealth.getChildren().addAll(wallWeapons,healthBar);
 	        GridPane lane = new GridPane();
-	        wall.getChildren().addAll(Wall,weapons,lane);
+	        wall.getChildren().addAll(wallWeaponsHealth,lane);
+	        Insets margin = new Insets(5, 0, 0, 0); // top, right, bottom, left
+	        VBox.setMargin(healthBar, margin);
+	        //Insets margin3 = new Insets(0, 0, 5, 0);
+	        //VBox.setMargin(wall, margin3);
 	        lanes.add(wall);
 			}
 		return lanes;
@@ -172,7 +193,13 @@ public class MainPageController {
 		updatedTitansQueue.add(currentImage);
 		}
 		return updatedTitansQueue; 
-	
-		
+	}
+	public void updateResources() {
+		Label resources = (Label) layout.lookup("#resourcesNum");
+		resources.setText(" : "+battle.getResourcesGathered());
+	}
+	public void updateScore() {
+		Label score = (Label) layout.lookup("#scoreNum");
+		score.setText(" : "+battle.getScore());
 	}
 }

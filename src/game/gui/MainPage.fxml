@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.Image?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="gameScene" maxHeight="750.0" maxWidth="1500.0" minHeight="750.0" minWidth="1500.0" prefHeight="750.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gui.MainPageController">
+<BorderPane id="gameScene" maxHeight="780.0" maxWidth="1500.0" minHeight="780.0" minWidth="1500.0" prefHeight="780.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gui.MainPageController">
    <top>
       <HBox fx:id="HUD" prefHeight="40.0" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
@@ -21,21 +22,21 @@
                         <Image url="@../../../images/Resources.png" />
                      </image>
                   </ImageView>
-                  <Label maxHeight="40.0" minHeight="40.0" prefHeight="40.0" text=" : ">
+                  <Label id="resourcesNum" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <HBox maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0">
+            <HBox id="score" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0">
                <children>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/Score.png" />
                      </image>
                   </ImageView>
-                  <Label maxHeight="40.0" minHeight="40.0" prefHeight="40.0" text=" : ">
+                  <Label id="scoreNum" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
                      <font>
                         <Font size="19.0" />
                      </font>
@@ -56,15 +57,18 @@
       </HBox>
    </top>
    <bottom>
-      <HBox fx:id="turns" prefHeight="40.0" prefWidth="1375.0" BorderPane.alignment="CENTER" />
+      <HBox id="turns" fx:id="turns" minHeight="40.0" minWidth="1500.0" prefHeight="40.0" prefWidth="1500.0" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <VBox fx:id="dangerLevel" minHeight="670.0" minWidth="100.0" prefHeight="670.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+      <VBox id="dangerLevel" fx:id="dangerLevel" maxWidth="120.0" minHeight="700.0" minWidth="120.0" prefHeight="700.0" prefWidth="120.0" BorderPane.alignment="CENTER" />
    </right>
    <left>
-      <ListView fx:id="weaponShop" maxWidth="150.0" minHeight="670.0" minWidth="150.0" prefHeight="670.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+      <ListView id="weaponShop" fx:id="weaponShop" maxWidth="150.0" minHeight="700.0" minWidth="150.0" prefHeight="700.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="20.0" />
+         </padding></ListView>
    </left>
    <center>
-      <ListView fx:id="lanes" prefHeight="150.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
+      <ListView id="lanes" fx:id="lanes" minHeight="700.0" minWidth="1230.0" prefHeight="700.0" prefWidth="1230.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
