@@ -2,6 +2,7 @@ package game.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -10,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +20,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import game.engine.Battle;
+import game.engine.BattlePhase;
 import game.engine.lanes.Lane;
 import game.engine.titans.PureTitan;
 import game.engine.titans.Titan;
@@ -35,6 +39,7 @@ public class MainPageController {
 	private Scene game;	
 	private Battle battle;
 	private BorderPane layout;
+	private ProgressBar turnBar;
 	public MainPageController() throws Exception{
 		
 	}
@@ -52,9 +57,13 @@ public class MainPageController {
 		titanImages.getChildren().addAll(updateApproachingTitans());
 		titanImages.setSpacing(10);
 		lanes.setItems(lane);
+		this.turnBar = (ProgressBar) layout.lookup("#turnBar");
+		turnBar.setStyle("-fx-background-color: transparent;");
+		turnBar.setStyle("-fx-border-color: #000000; -fx-border-width: 2px;");
 		updateResources();
 		updateScore();
-		game = new Scene(layout ,width , height);	
+		updateTurns();
+		game = new Scene(layout ,width , height);
 	}
 	
 	private ObservableList<VBox> weaponShopBuilder() throws IOException {
@@ -193,6 +202,45 @@ public class MainPageController {
 		updatedTitansQueue.add(currentImage);
 		}
 		return updatedTitansQueue; 
+	}
+	public void updateTurns() {
+		int numOfTurns = 20;
+		if(numOfTurns<15) {
+			Circle circle = (Circle)layout.lookup("#turnCircle");
+			circle.setFill(Color.GREEN);
+			turnBar.setStyle("-fx-accent: green;");
+		}
+		else if(numOfTurns<30) {
+			Circle circle = (Circle)layout.lookup("#turnCircle");
+			circle.setFill(Color.YELLOW);
+			turnBar.setStyle("-fx-accent: yellow;");
+		}
+		else if(numOfTurns<35) {
+			Circle circle = (Circle)layout.lookup("#turnCircle");
+			circle.setFill(Color.ORANGE);
+			turnBar.setStyle("-fx-accent: orange;");
+		}
+		else {
+			Circle circle = (Circle)layout.lookup("#turnCircle");
+			circle.setFill(Color.DARKRED);
+			turnBar.setStyle("-fx-accent: darkred;");
+		}
+		Text turns = (Text)layout.lookup("#turnsText");
+		turns.setText(numOfTurns+"");
+		 // Change color to green
+		Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                
+                for (int i = 0; i <= 100; i++) {
+                    double progress = (double) numOfTurns / 35; // get turns
+                    updateProgress(progress, 1.0); // Update progress
+                }
+                return null;
+            }
+        };
+		turnBar.progressProperty().bind(task.progressProperty());
+        new Thread(task).start();
 	}
 	public void updateResources() {
 		Label resources = (Label) layout.lookup("#resourcesNum");
