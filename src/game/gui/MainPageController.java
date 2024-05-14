@@ -204,7 +204,7 @@ public class MainPageController {
 		return updatedTitansQueue; 
 	}
 	public void updateTurns() {
-		int numOfTurns = 20;
+		int numOfTurns = battle.getNumberOfTurns();
 		if(numOfTurns<15) {
 			Circle circle = (Circle)layout.lookup("#turnCircle");
 			circle.setFill(Color.GREEN);
