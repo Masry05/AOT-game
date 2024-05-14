@@ -16,8 +16,8 @@ public class Start extends Application {
     	Parent root;
     	Scene s;
 		try {
-			root = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
-	        s = new Scene (root,800,1000);
+		    root = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+	        s = new Scene (root,1500,790);
 		    window.setScene(s);
 	    	window.show();
 		} catch (IOException e) {

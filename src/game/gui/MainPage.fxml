@@ -55,7 +55,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <HBox fx:id="titanImages" maxHeight="40.0" maxWidth="480.0" minHeight="40.0" minWidth="480.0" prefHeight="40.0" prefWidth="480.0" />
+                  <HBox fx:id="titanImages" maxHeight="40.0" maxWidth="480.0" minHeight="40.0" minWidth="480.0" prefHeight="40.0" prefWidth="480.0" spacing="10.0" />
                </children></HBox>
          </children>
       </HBox>
