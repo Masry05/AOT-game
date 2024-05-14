@@ -1,3 +1,7 @@
+#healthOfTitans{
+	-fx-font-size:8;
+	-fx-text-fill: black;
+}
 #optionsVbox, #instructionPane{
 	-fx-border-style:none;
 	-fx-background-radius: 20; 
