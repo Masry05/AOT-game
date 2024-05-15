@@ -1,3 +1,4 @@
+
 package game.gui;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class HomeController implements Initializable{
 	    @Override
 		public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		}
+	}
 	    @FXML
 	    public void handleStartButtonClick(ActionEvent event) {
 	        // Get the button that was clicked
@@ -47,7 +48,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 				try {
-					MainPageController s = new MainPageController(3, 250, height, width);
+					MainPageController s = new MainPageController(3, 250, width, height);
 					window.setScene(s.getGame());
 					
 				} catch (IOException e1) {
@@ -68,7 +69,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 					try {
-						MainPageController s = new MainPageController(5, 125, height, width);
+						MainPageController s = new MainPageController(5, 125, width, height);
 						window.setScene(s.getGame());
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
