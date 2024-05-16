@@ -1,6 +1,8 @@
 
 package game.gui;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -18,6 +20,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -36,6 +39,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import game.engine.Battle;
 import game.engine.base.Wall;
 import game.engine.exceptions.InsufficientResourcesException;
@@ -71,12 +75,18 @@ public class MainPageController {
 	private ListView<VBox> weaponShop;
 	private ObservableList<HBox> lanes;
 	private HBox titanImages;
+	private double width;
+	private double height;
+	private Stage window;
 	public MainPageController() throws Exception{
 		
 	}
 
-	public MainPageController(int numOfLanes, int resources, double width , double height) throws Exception{
+	public MainPageController(int numOfLanes, int resources, double width , double height, Stage window) throws Exception{
+		this.window = window;
 		this.numOfLanes = numOfLanes;
+		this.width = width;
+		this.height = height;
 		this.battle = new Battle(1, 0, 59, numOfLanes, resources);
 		layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
 		game = new Scene(layout ,width , height);	
@@ -95,8 +105,6 @@ public class MainPageController {
 		update();
 		//give the player 3 seconds before showing the popup
 		selectionPopup();
-		
-		
 	}
 	
 	private ObservableList<VBox> weaponShopBuilder() throws IOException {
@@ -207,6 +215,9 @@ public class MainPageController {
 	        Insets margin = new Insets(5, 0, 0, 0); // top, right, bottom, left
 	        VBox.setMargin(healthBar, margin);
 	        lanes.add(wall);
+	        lanesCont.prefHeightProperty().bind(wall.heightProperty());
+	       // wallWeapons.prefHeightProperty().bind(wall.heightProperty());
+	       // wallShape.heightProperty().bind(wall.heightProperty());
 			}
 	}
 	public Scene getGame() {
@@ -345,14 +356,12 @@ public class MainPageController {
 		  Lane currLane = allLanes.get(i);// take one lane backend
 		  if(currLane.isLaneLost()) {
 			  HBox fLane = (HBox)lanes.get(i);
+			  fLane.setPrefHeight(230);
 			  fLane.getChildren().clear();
 			  StackPane lostLane = new StackPane();
 			  lostLane.setPrefWidth(1230);
-			  if(numOfLanes == 3) 
 			  lostLane.prefHeight(230);
-			  else 
-			   lostLane.prefHeight(130);
-			  Image soilImage = new Image(new FileInputStream("images"+File.separator+"grass.jpg")); // put desired image
+			  Image soilImage = new Image(new FileInputStream("images"+File.separator+"soil.jpg")); // put desired image
 			  BackgroundImage backgroundImage = new BackgroundImage(
 		                soilImage,
 		                BackgroundRepeat.NO_REPEAT,
@@ -369,9 +378,6 @@ public class MainPageController {
 		  Queue <Titan> temp2 = new LinkedList<Titan>();
 		  ImageView currentImage = null;
 		  StackPane cont = ((StackPane)lanes.get(i).getChildren().get(1));
-		  if(currLane.getLaneWall().getCurrentHealth()==4) { //75% 25%
-			  //different healths set the background of the stack pane into more soily or more grassy 
-		  }
 		  ObservableList< Node> cellsInLane = ((GridPane)cont.getChildren().get(0)).getChildren();// typecast into stackpane
 		  int size = cellsInLane.size();
 		  for(int j = 0; j < size ;j++) {
@@ -508,21 +514,54 @@ public class MainPageController {
 		titanImages.getChildren().clear();
 		titanImages.getChildren().addAll(updateApproachingTitans());
 		if(battle.isGameOver()) {
-			Stage alertStage = new Stage();
-			alertStage.setTitle("Game Over!");
-		    Label label = new Label("Game Over!");
-		    label.setAlignment(Pos.CENTER);
-		    Button closeButton = new Button("Exit");
-		    closeButton.setOnAction(event -> alertStage.close());
-		    BorderPane pane = new BorderPane();
-		    pane.setTop(label);
-		    pane.setCenter(closeButton);
-		    Scene scene = new Scene(pane, 500, 100);
-		    alertStage.setScene(scene);
-		    alertStage.initModality(Modality.APPLICATION_MODAL);
-		    alertStage.initStyle(StageStyle.UNDECORATED);
-		    alertStage.show();
-		}
+			StackPane layout = new StackPane();
+	    	ImageView blood1 = new ImageView(new Image(new FileInputStream("images"+File.separator+"blood1.png")));
+	    	blood1.setFitHeight(height);
+	    	blood1.setFitWidth(width);
+	    	ImageView blood2 = new ImageView(new Image(new FileInputStream("images"+File.separator+"blood2.png")));
+	    	blood2.setFitHeight(height);
+	    	blood2.setFitWidth(width);
+	    	Label game = new Label("Game");
+	    	Label gameover = new Label("Game Over");
+	    	gameover.setId("gameover");
+	    	StackPane cont = new StackPane();
+	    	Label message = new Label();
+	    	message.setId("message");
+	    	cont.getChildren().add(message);
+	    	cont.setId("MSGcont");
+	    	cont.setMaxWidth(500);
+	    	cont.setMaxHeight(300);
+	        String msg = "You have lost all the lanes!\n" + "The titans have entered wall Rose.\n" + "Score: " +battle.getScore() +"\n" + "Number of titans killed: " + Weapon.getKilled();
+	    	Scene s = new Scene(layout, 1000,800);
+	    	s.getStylesheets().add(getClass().getResource("home.css").toExternalForm());
+	    	Timeline timeline = new Timeline(
+	                new KeyFrame(Duration.seconds(1), event -> {
+	                    layout.getChildren().addAll(blood1);
+	                }),
+	                new KeyFrame(Duration.seconds(2), event -> {
+	                    layout.getChildren().addAll(blood2,gameover);
+	                }),
+	                new KeyFrame(Duration.seconds(4), event -> {
+	                	layout.getChildren().remove(2);
+	                    layout.getChildren().add(cont);
+	                    Typing.Typing(msg, message);
+	                }),
+	                new KeyFrame(Duration.seconds(15), event -> {
+	                	AnchorPane home;
+						try {
+							home = FXMLLoader.load(getClass().getResource("Homepage.fxml"));
+							Scene homep = new Scene(home,width, height);
+							window.setScene(homep);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	                	
+	                })
+	            );
+	    	timeline.play();
+	       window.setScene(s);
+	    }
 		else
 			selectionPopup();
 

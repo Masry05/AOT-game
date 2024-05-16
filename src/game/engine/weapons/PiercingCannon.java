@@ -21,6 +21,7 @@ public class PiercingCannon extends Weapon {
 			resources += attack(titan);
 			if(!titan.isDefeated())
 				temp.add(titan);
+			else killed++;
 		}
 			laneTitans.addAll(temp);
 		return resources;

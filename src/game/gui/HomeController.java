@@ -48,7 +48,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 				try {
-					MainPageController s = new MainPageController(3, 250, width, height);
+					MainPageController s = new MainPageController(3, 250, width, height,window);
 					window.setScene(s.getGame());
 					
 				} catch (IOException e1) {
@@ -69,7 +69,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 					try {
-						MainPageController s = new MainPageController(5, 125, width, height);
+						MainPageController s = new MainPageController(5, 125, width, height,window);
 						window.setScene(s.getGame());
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block

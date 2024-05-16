@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 		public void start(Stage primaryStage) {
 
 			try {
-				 MainPageController game = new MainPageController(3,250, 1000, 1000);
+				 MainPageController game = new MainPageController(3,250, 1000, 1000,new Stage());
 				 primaryStage.setScene(game.getGame());
 				 primaryStage.show();
 			}
