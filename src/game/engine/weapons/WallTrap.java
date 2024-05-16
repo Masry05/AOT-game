@@ -1,3 +1,4 @@
+
 package game.engine.weapons;
 
 import java.util.*;
@@ -19,6 +20,7 @@ public class WallTrap extends Weapon {
 			resources += attack(titan);
 			if(!titan.isDefeated())
 				laneTitans.add(titan);
+			else killed++;
 		}
 		return resources;
 	}

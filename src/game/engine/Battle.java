@@ -1,3 +1,4 @@
+
 package game.engine;
 
 import game.engine.weapons.factory.FactoryResponse;
@@ -12,7 +13,6 @@ import java.util.*;
 import static game.engine.dataloader.DataLoader.readTitanRegistry;
 
 public class Battle {
-
 	private final static int[][] PHASES_APPROACHING_TITANS = {{ 1, 1, 1, 2, 1, 3, 4 },
 															  { 2, 2, 2, 1, 3, 3, 4 },
 															  { 4, 4, 4, 4, 4, 4, 4 }};

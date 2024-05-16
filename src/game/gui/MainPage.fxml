@@ -55,7 +55,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <HBox fx:id="titanImages" maxHeight="40.0" maxWidth="480.0" minHeight="40.0" minWidth="480.0" prefHeight="40.0" prefWidth="480.0" spacing="10.0" />
+                  <HBox fx:id="titanImages" maxHeight="40.0" maxWidth="480.0" minHeight="40.0" minWidth="480.0" prefHeight="40.0" prefWidth="480.0" />
                </children></HBox>
          </children>
       </HBox>
@@ -63,7 +63,7 @@
    <bottom>
       <HBox id="turns" fx:id="turns" minHeight="40.0" minWidth="1500.0" prefHeight="40.0" prefWidth="1500.0" BorderPane.alignment="CENTER">
          <children>
-            <Region minHeight="40.0" minWidth="950.0" prefHeight="40.0" prefWidth="950.0" />
+            <Region minHeight="35.0" minWidth="350.0" prefHeight="35.0" prefWidth="350.0" />
             <StackPane prefHeight="40.0" prefWidth="549.0">
                <children>
                   <ProgressBar id="turnBar" minHeight="20.0" minWidth="350.0" prefHeight="20.0" prefWidth="350.0" progress="0.0">
@@ -71,7 +71,7 @@
                         <Insets left="180.0" />
                      </StackPane.margin>
                   </ProgressBar>
-                  <StackPane prefHeight="40.0" prefWidth="458.0">
+                  <StackPane prefHeight="40.0" prefWidth="440.0">
                      <children>
                         <Circle id="turnCircle" fill="DODGERBLUE" radius="19.0" stroke="BLACK" strokeType="INSIDE">
                            <StackPane.margin>
@@ -93,15 +93,15 @@
          </children></HBox>
    </bottom>
    <right>
-      <VBox id="dangerLevel" fx:id="dangerLevel" maxWidth="120.0" minHeight="700.0" minWidth="120.0" prefHeight="700.0" prefWidth="120.0" BorderPane.alignment="CENTER" />
+      <VBox id="dangerLevel" fx:id="dangerLevel" maxHeight="700.0" maxWidth="100.0" minHeight="700.0" minWidth="100.0" prefHeight="700.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
    </right>
    <left>
-      <ListView id="weaponShop" fx:id="weaponShop" maxWidth="150.0" minHeight="700.0" minWidth="150.0" prefHeight="700.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+      <ListView id="weaponShop" fx:id="weaponShop" maxHeight="700.0" maxWidth="170.0" minHeight="700.0" minWidth="170.0" prefHeight="700.0" prefWidth="170.0" BorderPane.alignment="CENTER">
          <padding>
-            <Insets top="20.0" />
+            <Insets top="10.0" />
          </padding></ListView>
    </left>
    <center>
-      <ListView id="lanes" fx:id="lanes" minHeight="700.0" minWidth="1230.0" prefHeight="700.0" prefWidth="1230.0" BorderPane.alignment="CENTER" />
+      <ListView id="lanes" fx:id="lanes" maxHeight="700.0" maxWidth="1230.0" minHeight="700.0" minWidth="1230.0" prefHeight="700.0" prefWidth="1230.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
