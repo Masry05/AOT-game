@@ -48,6 +48,10 @@ import game.engine.titans.ArmoredTitan;
 import game.engine.titans.ColossalTitan;
 import game.engine.titans.PureTitan;
 import game.engine.titans.Titan;
+import game.engine.weapons.PiercingCannon;
+import game.engine.weapons.SniperCannon;
+import game.engine.weapons.VolleySpreadCannon;
+import game.engine.weapons.WallTrap;
 import game.engine.weapons.Weapon;
 import game.engine.weapons.WeaponRegistry;
 import game.engine.weapons.factory.WeaponFactory;
@@ -101,7 +105,7 @@ public class MainPageController {
 		turns = (HBox) layout.lookup("#turns");
 		Region beforeBar= (Region) turns.getChildren().remove(0);
 		StackPane progressBar= (StackPane) turns.getChildren().remove(0);
-		
+		updateApproachingTitans();
         Button purchaseWeapon = new Button("Purchase Weapon");
         purchaseWeapon.setId("purchaseOrPass");
         purchaseWeapon.setPrefHeight(25);
@@ -182,10 +186,13 @@ public class MainPageController {
 		int heightPerLane = 0;
 		int imageSize = 0;
 		int wallLength = 0;
+		int wallrecLength = 0;
 		if(battle.getOriginalLanes().size()==3) {
 			heightPerLane = (int) (700/3);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-14;
+			wallrecLength = wallLength - 7;
+			
 			
 			//dangerLevel.getChildren().addAll(lane1, lane2, lane3);
 			//dangerLevel.setAlignment(Pos.TOP_CENTER);
@@ -194,11 +201,11 @@ public class MainPageController {
 			heightPerLane = (int) (700/5);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-22;
+			wallrecLength = wallLength - 10;
 			//dangerLevel.getChildren().addAll(lane1, lane2, lane3,lane4,lane5);
 			//dangerLevel.setAlignment(Pos.TOP_CENTER);
 		}
 	    for(int i=0; i<numOfLanes; i++) {
-	    	System.out.println(i);
 	        	VBox dangerEach= new VBox();
 				dangerEach.setPrefHeight(heightPerLane);
 				Text sumEach= new Text("0");
@@ -231,26 +238,25 @@ public class MainPageController {
 		        temp.getChildren().addAll(image,amount);
 		        weapons.add(temp, 0, j-1);
 			}
-			StackPane Wall = new StackPane();
-			VBox wallWeaponsHealth = new VBox();
-			Rectangle wallShape = new Rectangle(20,wallLength);
-			wallShape.setFill(Color.GREY);
-			HBox weaponsandhealth = new HBox();
 			VBox wallHealth = new VBox();
+			StackPane Wall = new StackPane();
+			Rectangle wallShape = new Rectangle(50,wallrecLength);
+			wallShape.setFill(Color.GRAY);			
+			Wall.getChildren().addAll(wallShape,weapons);
+			Wall.setAlignment(Pos.CENTER);
+			StackPane laneStack = new StackPane();
+			GridPane lane = new GridPane();
+	        laneStack.getChildren().add(lane);
 			ProgressBar healthBar = new ProgressBar();
 			int currentHealth = originalLanes.get(i).getLaneWall().getCurrentHealth();
 	        healthBar.setProgress(currentHealth/10000);
-	        healthBar.setPrefWidth(heightPerLane-100);
-	        //healthBar.getTransforms().add(new Rotate(90));
-	        Text health = new Text(currentHealth+"");
-	        wallHealth.getChildren().addAll(healthBar,health);
-	        weaponsandhealth.getChildren().addAll(weapons,wallHealth);
-			Wall.getChildren().addAll(wallShape,weaponsandhealth);	        
-	        GridPane lane = new GridPane();
-	        StackPane laneStack = new StackPane();
-	        laneStack.getChildren().add(lane);
-	        wall.getChildren().addAll(Wall, laneStack);
-	        wall.setAlignment(Pos.CENTER);
+	        healthBar.setPrefWidth(50);
+	        healthBar.setMaxWidth(50);
+	        healthBar.setPrefHeight(14);
+	        healthBar.setMaxHeight(14);
+	        healthBar.setStyle("-fx-accent: green;");
+	        wallHealth.getChildren().addAll(Wall,healthBar);
+			wall.getChildren().addAll(wallHealth,laneStack);
 	        lanes.add(wall);
 			}
 	}
@@ -484,7 +490,6 @@ public class MainPageController {
 		int weaponCode = weaponShop.getSelectionModel().getSelectedIndex()+1;
 		try {
 			battle.purchaseWeapon(weaponCode, selectedLane);
-			System.out.println(selectedLane.getLaneWall().getCurrentHealth());
 			selectedLane = null;
 			lanesList.setOnMouseClicked(null);
             weaponShop.setOnMouseClicked(null);
@@ -550,6 +555,7 @@ public class MainPageController {
 		updateTitansInLanes();
 		titanImages.getChildren().clear();
 		titanImages.getChildren().addAll(updateApproachingTitans());
+		updateWallHealthandWeaponsnum();
 		if(battle.isGameOver()) {
 			Stage alertStage = new Stage();
 			alertStage.setTitle("Game Over!");
@@ -566,6 +572,53 @@ public class MainPageController {
 		    alertStage.initStyle(StageStyle.UNDECORATED);
 		    alertStage.show();
 		}
+	}
+	public void updateWallHealthandWeaponsnum() {
+		ObservableList<HBox> lanes = lanesList.getItems();
+		for(int i =0 ;i<battle.getOriginalLanes().size();i++) {
+			if(!battle.getOriginalLanes().get(i).isLaneLost()) {
+				HBox allLane = lanes.get(i);
+				VBox allWall = (VBox) allLane.getChildren().get(0);
+				StackPane Wall = (StackPane) allWall.getChildren().get(0);
+				GridPane Weapons = (GridPane) Wall.getChildren().get(1);
+				int piercing = 0;
+				int sniper = 0;
+				int volley = 0;
+				int walltrap = 0;
+				Lane lane = battle.getOriginalLanes().get(i);
+				ArrayList<Weapon> weapons = lane.getWeapons();
+				for(int j=0;j<weapons.size();j++) {
+					Weapon temp = weapons.get(j);
+					if(temp instanceof PiercingCannon)
+						piercing++;
+					else if(temp instanceof SniperCannon)
+						sniper++;
+					else if(temp instanceof VolleySpreadCannon)
+						volley++;
+					else if(temp instanceof WallTrap)
+						walltrap++;
+				}
+				VBox piercingV = (VBox) Weapons.getChildren().get(0);
+				Text piercingL = (Text)piercingV.getChildren().get(1);
+				piercingL.setText("X"+piercing);
+				VBox sniperV = (VBox) Weapons.getChildren().get(1);
+				Text sniperL = (Text)sniperV.getChildren().get(1);
+				sniperL.setText("X"+sniper);
+				VBox volleyV = (VBox) Weapons.getChildren().get(2);
+				Text volleyL = (Text)volleyV.getChildren().get(1);
+				volleyL.setText("X"+volley);
+				VBox walltrapV = (VBox) Weapons.getChildren().get(3);
+				Text walltrapL = (Text)walltrapV.getChildren().get(1);
+				walltrapL.setText("X"+walltrap);
+				ProgressBar healthBar = (ProgressBar) allWall.getChildren().get(1);
+				int currentHealth = battle.getOriginalLanes().get(i).getLaneWall().getCurrentHealth();
+		        healthBar.setProgress((double)currentHealth/10000);
+		        healthBar.setStyle("-fx-accent: green;");
+		        
+			}
+		}
+		
+		
 	}
 	
 	
