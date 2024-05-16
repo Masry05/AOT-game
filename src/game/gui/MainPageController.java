@@ -1,14 +1,17 @@
+
 package game.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
@@ -16,23 +19,35 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import game.engine.Battle;
 import game.engine.base.Wall;
+import game.engine.exceptions.InsufficientResourcesException;
+import game.engine.exceptions.InvalidLaneException;
 import game.engine.lanes.Lane;
 import game.engine.titans.AbnormalTitan;
 import game.engine.titans.ArmoredTitan;
 import game.engine.titans.ColossalTitan;
 import game.engine.titans.PureTitan;
 import game.engine.titans.Titan;
+import game.engine.weapons.Weapon;
 import game.engine.weapons.WeaponRegistry;
 import game.engine.weapons.factory.WeaponFactory;
 import java.io.*;
@@ -47,38 +62,74 @@ public class MainPageController {
 	private Scene game;	
 	private Battle battle;
 	private BorderPane layout;
-	private ObservableList<HBox> lanes;
 	private int numOfLanes;
 	private ProgressBar turnBar;
+	private StackPane popup;
+	private Lane chosenLane;
+    private Weapon choseWeapon;
+	private ListView<HBox> lanesList;
+	private Lane selectedLane;
+	private ListView<VBox> weaponShop;
+	private ObservableList<HBox> lanes;
+	private HBox titanImages;
+    public HBox turns;
+    public VBox dangerLevel;
+    public Label dangerLabel;
+
+    
 	public MainPageController() throws Exception{
 		
 	}
 
 	public MainPageController(int numOfLanes, int resources, double width , double height) throws Exception{
 		this.numOfLanes = numOfLanes;
-		this.battle = new Battle(1, 0, 10, numOfLanes, resources);
+		this.battle = new Battle(1, 0, 59, numOfLanes, resources);
 		layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
 		game = new Scene(layout ,width , height);	
 		game.getStylesheets().add(getClass().getResource("home.css").toExternalForm());
+		weaponShop = (ListView<VBox>) layout.lookup("#weaponShop");
 		ObservableList<VBox> weapons = weaponShopBuilder();
-		ListView<VBox> weaponShop = (ListView<VBox>) layout.lookup("#weaponShop");
 		weaponShop.setItems(weapons);
-		ListView<HBox> lanes = (ListView<HBox>) layout.lookup("#lanes");
-		ObservableList<HBox> lane = lanesBuilder();
-		ObservableList <ImageView> approachingTitans =  updateApproachingTitans();
-		HBox titanImages = (HBox)layout.lookup("#titanImages");
-		titanImages.getChildren().addAll(updateApproachingTitans());
-		titanImages.setSpacing(10);
-		lanes.setItems(lane);
-		this.turnBar = (ProgressBar) layout.lookup("#turnBar");
+		lanesList = (ListView<HBox>) layout.lookup("#lanes");
+		lanesBuilder();
+		lanesList.setItems(lanes);
+		titanImages = (HBox)layout.lookup("#titanImages");
+		turnBar = (ProgressBar) layout.lookup("#turnBar");
 		turnBar.setStyle("-fx-background-color: transparent;");
 		turnBar.setStyle("-fx-border-color: #000000; -fx-border-width: 2px;");
-		updateResources();
-		updateScore();
-		updateTurns();
-		addGrass();
-		updateTitansInLanes();
+		turns = (HBox) layout.lookup("#turns");
+		Region beforeBar= (Region) turns.getChildren().remove(0);
+		StackPane progressBar= (StackPane) turns.getChildren().remove(0);
 		
+        Button purchaseWeapon = new Button("Purchase Weapon");
+        purchaseWeapon.setId("purchaseOrPass");
+        purchaseWeapon.setPrefHeight(25);
+        purchaseWeapon.setPrefWidth(200);
+        purchaseWeapon.setOnAction(e -> setLane());
+
+        Button passTurn = new Button("Pass Turn");
+        passTurn.setId("purchaseOrPass");
+        passTurn.setPrefHeight(25);
+        passTurn.setPrefWidth(200);
+        turns.getChildren().addAll(beforeBar, purchaseWeapon, passTurn, progressBar);
+
+        turns.setMargin(beforeBar, new Insets(5, 10, 5, 10));
+        turns.setMargin(purchaseWeapon, new Insets(5, 10, 5, 10));
+        turns.setMargin(passTurn, new Insets(5, 10, 5, 10));
+        
+        passTurn.setOnAction(e1-> {
+	    		battle.passTurn();
+	    		try {
+	    			update();
+	        		// give player 3 seconds to see changes
+	    		}
+	    		catch(Exception e2) {
+	    			e2.printStackTrace();
+	    		}
+		});
+		setCells();
+		update();
+		//give the player 3 seconds before showing the popup
 	}
 	
 	private ObservableList<VBox> weaponShopBuilder() throws IOException {
@@ -105,7 +156,7 @@ public class MainPageController {
 	        imageView.setFitHeight(130);
 			Text name = new Text(weapon.getName());
 			Text price = new Text("Price: " + weapon.getPrice());
-			Text damagePoints= new Text("Damage Points: " + weapon.getDamage());
+			Text damagePoints= new Text("Damage: " + weapon.getDamage());
 			temp.getChildren().addAll(imageView,name,price,damagePoints);
 			Tooltip tooltip = new Tooltip("Range: "+ range);
 	        Tooltip.install(temp, tooltip);
@@ -115,10 +166,11 @@ public class MainPageController {
 		}
 		 return weapons;
 	}
-	private ObservableList<HBox> lanesBuilder() throws FileNotFoundException {
+	private void lanesBuilder() throws FileNotFoundException {
 		lanes = FXCollections.observableArrayList();
 		ArrayList<Lane> originalLanes = battle.getOriginalLanes();
 		HashMap<Integer,WeaponRegistry> shop = this.battle.getWeaponFactory().getWeaponShop();
+		dangerLevel = (VBox) layout.lookup("#dangerLevel");
 		int heightPerLane = 0;
 		int imageSize = 0;
 		int wallLength = 0;
@@ -126,13 +178,27 @@ public class MainPageController {
 			heightPerLane = (int) (700/3);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-14;
+			
+			//dangerLevel.getChildren().addAll(lane1, lane2, lane3);
+			//dangerLevel.setAlignment(Pos.TOP_CENTER);
 		}
 		else {
 			heightPerLane = (int) (700/5);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-22;
+			//dangerLevel.getChildren().addAll(lane1, lane2, lane3,lane4,lane5);
+			//dangerLevel.setAlignment(Pos.TOP_CENTER);
 		}
-		
+	    for(int i=0; i<numOfLanes; i++) {
+	    	System.out.println(i);
+	        	VBox dangerEach= new VBox();
+				dangerEach.setPrefHeight(heightPerLane);
+				Text sumEach= new Text("0");
+				dangerLabel= new Label("Danger Level: ");
+				dangerEach.getChildren().addAll(dangerLabel,sumEach);
+				dangerEach.setAlignment(Pos.CENTER);
+				dangerLevel.getChildren().add(dangerEach);
+	        }
 		for(int i = 0;i<originalLanes.size();i++) {
 			HBox wall = new HBox();
 			GridPane weapons = new GridPane();
@@ -157,11 +223,11 @@ public class MainPageController {
 		        Insets margin = new Insets(0, 0, 10, 5);
 		        VBox.setMargin(wall, margin);
 		        weapons.add(temp, 0, j-1);
+		  
 			}
 			VBox wallWeaponsHealth = new VBox();
 			Rectangle wallShape = new Rectangle(50,wallLength);
 			wallShape.setFill(Color.GREY);
-			//ImageView image = new ImageView(new Image(new FileInputStream("images"+File.separator+"Wall.png")));
 			GridPane healthBar = new GridPane();
 	        int numCols = 10;
 	        for (int j = 0; j < numCols; j++) {
@@ -174,22 +240,28 @@ public class MainPageController {
 	        wallWeapons.getChildren().addAll(wallShape,weapons);
 	        wallWeaponsHealth.getChildren().addAll(wallWeapons,healthBar);
 	        GridPane lane = new GridPane();
-	        wall.getChildren().addAll(wallWeaponsHealth,lane);
+	        lane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+	        Image grassImage = new Image(new FileInputStream("images"+File.separator+"grass.jpg")); // put desired image
+	        BackgroundImage backgroundImage = new BackgroundImage(
+	                grassImage,
+	                BackgroundRepeat.NO_REPEAT,
+	                BackgroundRepeat.NO_REPEAT,
+	                BackgroundPosition.CENTER,
+	                BackgroundSize.DEFAULT);
+	        StackPane lanesCont = new StackPane();
+	        lanesCont.setBackground(new Background(backgroundImage));
+	        lanesCont.getChildren().add(lane);
+	        wall.getChildren().addAll(wallWeaponsHealth,lanesCont);
 	        wall.setSpacing(5);
 	        Insets margin = new Insets(5, 0, 0, 0); // top, right, bottom, left
 	        VBox.setMargin(healthBar, margin);
-	        //Insets margin3 = new Insets(0, 0, 5, 0);
-	        //VBox.setMargin(wall, margin3);
 	        lanes.add(wall);
 			}
-		return lanes;
-		
 	}
 	public Scene getGame() {
 		return game;
 	}
 	public ObservableList <ImageView> updateApproachingTitans () throws FileNotFoundException {
-		battle.refillApproachingTitans();
 		ArrayList<Titan> approachingTitans = battle.getApproachingTitans();
 		ObservableList<ImageView> updatedTitansQueue = FXCollections.observableArrayList();
 		int turnTitansNum= battle.getNumberOfTitansPerTurn();
@@ -268,35 +340,26 @@ public class MainPageController {
 		Label score = (Label) layout.lookup("#scoreNum");
 		score.setText(" : "+battle.getScore());
 	}
-	public void addGrass() throws FileNotFoundException {
+	public void setCells() throws FileNotFoundException {
 		for (int i = 0; i < numOfLanes; i++) {//passes on every lane
 			HBox temp = lanes.get(i);
-			GridPane currentLane = (GridPane) temp.getChildren().get(1);
+			StackPane cont = (StackPane) temp.getChildren().get(1);
+			GridPane currentLane = (GridPane) cont.getChildren().get(0);
 		  for (int j = 0; j < 29; j++) {// adds each cell
-			  Rectangle tempp = new Rectangle();
 			  StackPane cell = new StackPane();
 			  cell.setPrefWidth(39);
-			  tempp.setWidth(39);
-			  /*cell.prefHeight(numOfLanes == 3?230:130);
-			  tempp.prefHeight(numOfLanes == 3?230:130);
-			   doesnt work */
-			  if(numOfLanes == 3) {
+			  cell.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+			  if(numOfLanes == 3) 
 			  cell.prefHeight(230);
-			  tempp.setHeight(230);
-			  }
 			  else 
-			  { cell.prefHeight(130);
-			    tempp.setHeight(130);
-			  }
-			  tempp.setFill(Color.GREEN);// put transparent and fix css of stackpane or directly css of rectangle
-			  cell.getChildren().add(tempp);
+			  cell.prefHeight(130);
 			  currentLane.add(cell, j, i);
 	        }
 		  }
 		}
 	public void updateTitansInLanes () throws FileNotFoundException {
 		//created a lane with titans
-		PriorityQueue <Lane> allLanes = new PriorityQueue<Lane>();
+		/*ArrayList <Lane> allLanes = new ArrayList<Lane>();
 	    Lane trial = new Lane (new Wall(200));
 		trial.addTitan(new PureTitan(1,2,3,59,10,6,7));
 		trial.addTitan(new ColossalTitan(1,2,3,59,5,6,7));
@@ -324,46 +387,48 @@ public class MainPageController {
 		trial2.addTitan(new ColossalTitan(1,2,3,58,5,6,7));
 		trial2.addTitan(new ColossalTitan(1,2,3,58,5,6,7));
 		allLanes.add(trial);
-		allLanes.add(trial2);
-	   //  PriorityQueue <Lane> allLanes = battle.originalLanes //what should actually happen
-		Queue <Lane> temp = new LinkedList<Lane>();
+		allLanes.add(trial2);*/
+	    ArrayList<Lane> allLanes = battle.getOriginalLanes(); //what should actually happen
 		int size1 = allLanes.size();
 	    for(int i = 0; i < size1 ;i++) {
-		  Lane currLane = allLanes.remove();// take one lane
-		  temp.add(currLane);
+		  Lane currLane = allLanes.get(i);// take one lane backend
 		  if(currLane.isLaneLost()) {
 			  HBox fLane = (HBox)lanes.get(i);
 			  fLane.getChildren().clear();
-			  Rectangle tempp = new Rectangle();
 			  StackPane lostLane = new StackPane();
 			  lostLane.setPrefWidth(1230);
-			  tempp.setWidth(1230);
-			  if(numOfLanes == 3) {
+			  if(numOfLanes == 3) 
 			  lostLane.prefHeight(230);
-			  tempp.setHeight(230);
-			  }
 			  else 
-			  { lostLane.prefHeight(130);
-			    tempp.setHeight(130);
-			  }
-			  tempp.setFill(Color.BROWN);
+			   lostLane.prefHeight(130);
+			  Image soilImage = new Image(new FileInputStream("images"+File.separator+"grass.jpg")); // put desired image
+			  BackgroundImage backgroundImage = new BackgroundImage(
+		                soilImage,
+		                BackgroundRepeat.NO_REPEAT,
+		                BackgroundRepeat.NO_REPEAT,
+		                BackgroundPosition.CENTER,
+		                BackgroundSize.DEFAULT);
+		      lostLane.setBackground(new Background(backgroundImage));
 			  Label lost = new Label("This is  a Lost Lane");
-			  lostLane.getChildren().addAll(tempp,lost);
+			  lostLane.getChildren().addAll(lost);
 			  fLane.getChildren().add(lostLane);
 		  }
 		  else {
-		  PriorityQueue <Titan> currTitans = currLane.getTitans();//take the titans in this lane
+		  PriorityQueue <Titan> currTitans = currLane.getTitans();//take the titans in this lane backend
 		  Queue <Titan> temp2 = new LinkedList<Titan>();
 		  ImageView currentImage = null;
-		  ObservableList< Node> cellsInLane = ((GridPane)lanes.get(i).getChildren().get(1)).getChildren();// typecast into stackpane
+		  StackPane cont = ((StackPane)lanes.get(i).getChildren().get(1));
+		  if(currLane.getLaneWall().getCurrentHealth()==4) { //75% 25%
+			  //different healths set the background of the stack pane into more soily or more grassy 
+		  }
+		  ObservableList< Node> cellsInLane = ((GridPane)cont.getChildren().get(0)).getChildren();// typecast into stackpane
 		  int size = cellsInLane.size();
 		  for(int j = 0; j < size ;j++) {
 			  StackPane curr = ((StackPane)cellsInLane.get(j));
-			  Rectangle Temp = (Rectangle)((StackPane)cellsInLane.get(j)).getChildren().remove(0);
 			  curr.getChildren().clear();
 			  VBox left = new VBox();
 			  VBox right = new VBox();
-			  curr.getChildren().addAll(Temp,left,right); 
+			  curr.getChildren().addAll(left,right); 
 			  StackPane.setAlignment(right, Pos.CENTER_RIGHT);
 			  StackPane.setAlignment(left, Pos.CENTER_LEFT);
 			  left.setMaxWidth(curr.getWidth()/2);
@@ -373,8 +438,11 @@ public class MainPageController {
 			  	Titan currTitan = currTitans.remove();
 			  	temp2.add(currTitan);
 			  	int distance = currTitan.getDistance();
-			  	int col = distance/2 - 1;
+			  	int col = distance==0?0:distance/2 - 1;
 			  	int thealth = currTitan.getCurrentHealth();
+			  	//Text currDangerText= (Text) currDangerLane.getChildren().get(1);
+			  	//int sumSoFar= Integer.parseInt(currDangerText.getText())+ currTitan.getDangerLevel();
+			  	//currDangerText.setText(sumSoFar + " ");
 			  if(currTitan instanceof PureTitan) 
 			      currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"PureTitan.png")));
 			  else if (currTitan instanceof AbnormalTitan)
@@ -388,19 +456,119 @@ public class MainPageController {
 			  currentImage.setFitHeight(25);
 			  StackPane currCell = (StackPane) cellsInLane.get(col);
 			  int parity = distance%2;
-			  VBox willAdd =  parity == 0? (VBox)currCell.getChildren().get(1):(VBox)currCell.getChildren().get(2);
+			  VBox willAdd =  parity == 0? (VBox)currCell.getChildren().get(0):(VBox)currCell.getChildren().get(1);
 			  VBox titanCont = new VBox();
 			  Label health = new Label (""+ thealth);
 			  health.setId("healthOfTitans");
 			  titanCont.getChildren().addAll(currentImage, health);
 		      willAdd.getChildren().add(titanCont);
+		      
 		  }
 		  while(!temp2.isEmpty()) currTitans.add(temp2.remove());
 		  }
-	 }
-	    while (!temp.isEmpty()) allLanes.add(temp.remove());
-	    
-  }
+		  
+	    }	    
+	}
+
+	public void setLane() {
+		int selectedIndex = lanesList.getSelectionModel().getSelectedIndex();
+        selectedLane = battle.getOriginalLanes().get(selectedIndex);
+        weaponShop.setOnMouseClicked(e1 -> purchaseWeapon());
+	}
+	
+	/*public void updateWeaponsCounter(int laneIndex) {
+		HBox currLaneWall = (HBox) lanes.get(laneIndex);
+		
+		VBox vBox = (VBox) weapons.getChildren().get(row * originalLanes.size() + col);
+	
+	}*/
+	public void purchaseWeapon() {
+		int weaponCode = weaponShop.getSelectionModel().getSelectedIndex()+1;
+		try {
+			battle.purchaseWeapon(weaponCode, selectedLane);
+			System.out.println(selectedLane.getLaneWall().getCurrentHealth());
+			selectedLane = null;
+			lanesList.setOnMouseClicked(null);
+            weaponShop.setOnMouseClicked(null);
+            //updateWeaponsCounter(weaponCode -1);
+            update();
+            // give player 3 seconds to notice changes
+		}
+		catch(InvalidLaneException e) {
+			Stage alertStage = new Stage();
+			alertStage.setTitle("Invalid Lane");
+		    Label label = new Label(e.getMessage());
+		    label.setAlignment(Pos.CENTER);
+		    Button closeButton = new Button("Exit");
+		    closeButton.setOnAction(event -> alertStage.close());
+		    BorderPane pane = new BorderPane();
+		    pane.setTop(label);
+		    pane.setCenter(closeButton);
+		    Scene scene = new Scene(pane, 500, 100);
+		    alertStage.setScene(scene);
+		    alertStage.initModality(Modality.APPLICATION_MODAL);
+		    alertStage.initStyle(StageStyle.UNDECORATED);
+		    alertStage.show();
+		}
+		catch(InsufficientResourcesException e) {
+			Stage alertStage = new Stage();
+			alertStage.setTitle("Insufficient Resources");
+		    Label label = new Label(e.getMessage());
+		    label.setAlignment(Pos.CENTER);
+		    Button closeButton = new Button("Exit");
+		    closeButton.setOnAction(event -> alertStage.close());
+		    BorderPane pane = new BorderPane();
+		    pane.setTop(label);
+		    pane.setCenter(closeButton);
+		    Scene scene = new Scene(pane, 500, 100);
+		    alertStage.setScene(scene);
+		    alertStage.initModality(Modality.APPLICATION_MODAL);
+		    alertStage.initStyle(StageStyle.UNDECORATED);
+		    alertStage.show();
+		    // when they are low we need to see if he wants to buy another weapon or pass turn
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	public void updateDangerlevels() {
+		//System.out.println(numOfLanes);
+		for(int i=0; i<numOfLanes; i++) {
+			//System.out.println(battle.getOriginalLanes().size());
+			Lane currLane= battle.getOriginalLanes().get(i);
+			VBox currDangerLane = (VBox) dangerLevel.getChildren().get(i);
+			Text currDangerText = (Text) currDangerLane.getChildren().get(1);
+			currDangerText.setText(currLane.getDangerLevel()+ " ");
+		}
+	}
+	
+	public void update() throws Exception {
+		//updateWallHealth();
+		updateDangerlevels();
+		updateResources();
+		updateScore();
+		updateTurns();
+		updateTitansInLanes();
+		titanImages.getChildren().clear();
+		titanImages.getChildren().addAll(updateApproachingTitans());
+		if(battle.isGameOver()) {
+			Stage alertStage = new Stage();
+			alertStage.setTitle("Game Over!");
+		    Label label = new Label("Game Over!");
+		    label.setAlignment(Pos.CENTER);
+		    Button closeButton = new Button("Exit");
+		    closeButton.setOnAction(event -> alertStage.close());
+		    BorderPane pane = new BorderPane();
+		    pane.setTop(label);
+		    pane.setCenter(closeButton);
+		    Scene scene = new Scene(pane, 500, 100);
+		    alertStage.setScene(scene);
+		    alertStage.initModality(Modality.APPLICATION_MODAL);
+		    alertStage.initStyle(StageStyle.UNDECORATED);
+		    alertStage.show();
+		}
+	}
 	
 	
 }

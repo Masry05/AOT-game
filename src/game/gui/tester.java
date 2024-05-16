@@ -13,15 +13,15 @@ import javafx.stage.Stage;
 		public void start(Stage primaryStage) {
 
 			try {
-				 MainPageController game = new MainPageController(3,125, 1500, 790);
+				 MainPageController game = new MainPageController(3,250, 1000, 1000);
 				 primaryStage.setScene(game.getGame());
 				 primaryStage.show();
 			}
-		    catch(Exception e) {
+			   catch(Exception e) {
 				System.out.println(e);
 				e.printStackTrace();
 			}
-		
+			
 		}
 	    public static void main(String[] args) {
 	        launch(args);
