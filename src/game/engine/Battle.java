@@ -135,7 +135,7 @@ public class Battle {
 	}
 	
 	public void purchaseWeapon(int weaponCode, Lane lane) throws InsufficientResourcesException,InvalidLaneException{
-		if(!lanes.contains(lane) && !lane.isLaneLost())
+		if(!lanes.contains(lane) && lane.isLaneLost())
 			throw new InvalidLaneException();
 		FactoryResponse boughtWeapon = weaponFactory.buyWeapon(resourcesGathered,weaponCode);
 		resourcesGathered = boughtWeapon.getRemainingResources();

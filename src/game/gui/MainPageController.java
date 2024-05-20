@@ -1,6 +1,10 @@
 
 package game.gui;
 
+import game.engine.weapons.PiercingCannon;
+import game.engine.weapons.SniperCannon;
+import game.engine.weapons.VolleySpreadCannon;
+import game.engine.weapons.WallTrap;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -30,6 +34,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -75,6 +80,9 @@ public class MainPageController {
 	private ListView<VBox> weaponShop;
 	private ObservableList<HBox> lanes;
 	private HBox titanImages;
+	public HBox turns;
+	public VBox dangerLevel;
+	public Label dangerLabel;
 	private double width;
 	private double height;
 	private Stage window;
@@ -89,6 +97,7 @@ public class MainPageController {
 		this.height = height;
 		this.battle = new Battle(1, 0, 59, numOfLanes, resources);
 		layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
+		
 		game = new Scene(layout ,width , height);	
 		game.getStylesheets().add(getClass().getResource("home.css").toExternalForm());
 		weaponShop = (ListView<VBox>) layout.lookup("#weaponShop");
@@ -101,10 +110,45 @@ public class MainPageController {
 		turnBar = (ProgressBar) layout.lookup("#turnBar");
 		turnBar.setStyle("-fx-background-color: transparent;");
 		turnBar.setStyle("-fx-border-color: #000000; -fx-border-width: 2px;");
+		turns = (HBox) layout.lookup("#turns");
+		Region beforeBar= (Region) turns.getChildren().remove(0);
+		StackPane progressBar= (StackPane) turns.getChildren().remove(0);
+		updateApproachingTitans();
+        Button purchaseWeapon = new Button("Purchase Weapon");
+        HBox resourcesBox = (HBox) layout.lookup("#resources");
+        Tooltip info = new Tooltip("Resources");
+        Tooltip.install(resourcesBox,info);
+        HBox scoreBox = (HBox) layout.lookup("#score");
+        Tooltip info1 = new Tooltip("Score");
+        Tooltip.install(scoreBox,info1);
+        purchaseWeapon.setId("purchaseOrPass");
+        purchaseWeapon.setPrefHeight(25);
+        purchaseWeapon.setPrefWidth(200);
+        purchaseWeapon.setOnAction(e -> {lanesList.setOnMouseClicked(e1 -> setLane());});
+
+        Button passTurn = new Button("Pass Turn");
+        passTurn.setId("purchaseOrPass");
+        passTurn.setPrefHeight(25);
+        passTurn.setPrefWidth(200);
+        turns.getChildren().addAll(beforeBar, purchaseWeapon, passTurn, progressBar);
+
+        turns.setMargin(beforeBar, new Insets(5, 10, 5, 10));
+        turns.setMargin(purchaseWeapon, new Insets(5, 10, 5, 10));
+        turns.setMargin(passTurn, new Insets(5, 10, 5, 10));
+        
+        passTurn.setOnAction(e1-> {
+	    		battle.passTurn();
+	    		try {
+	    			update();
+	        		// give player 3 seconds to see changes
+	    		}
+	    		catch(Exception e2) {
+	    			e2.printStackTrace();
+	    		}
+		});
 		setCells();
 		update();
 		//give the player 3 seconds before showing the popup
-		selectionPopup();
 	}
 	
 	private ObservableList<VBox> weaponShopBuilder() throws IOException {
@@ -115,24 +159,31 @@ public class MainPageController {
 			WeaponRegistry weapon = shop.get(i);
 			ImageView imageView= null;
 			String range;
+			String typeS;
 			switch(i) {
 				case 1: imageView = new ImageView(new Image (new FileInputStream("images"+File.separator+"PiercingCannon.png")));
-						range = "Attacks the closest 5 titans";break;
+						range = "Attacks the closest 5 titans";
+						typeS="Piercing Cannon";break;
 				case 2: imageView = new ImageView(new Image (new FileInputStream("images"+File.separator+"SniperCannon.png")));
-						range = "Attacks the closest titan";break;
+						range = "Attacks the closest titan";
+						typeS="Sniper Cannon";break;
 				case 3: imageView = new ImageView(new Image (new FileInputStream("images"+File.separator+"VolleySpreadCannon.png")));
-						range = "Attacks any titan within "+weapon.getMinRange()+" to "+weapon.getMaxRange()+" meters";break;
+						range = "Attacks any titan within "+weapon.getMinRange()+" to "+weapon.getMaxRange()+" meters";
+						typeS="Volley Spread Cannon";break;
 				case 4: imageView = new ImageView(new Image (new FileInputStream("images"+File.separator+"WallTrap.png")));
-						range = "Attacks the closest titan only if it has reached the wall";break;
+						range = "Attacks the closest titan only if it has reached the wall";
+						typeS="Wall Trap";break;
 				default:imageView = null;
 						range = "Error while getting the range";
+						typeS = "Error while getting the type";
 			}
-	        imageView.setFitWidth(130);
-	        imageView.setFitHeight(130);
+	        imageView.setFitWidth(100);
+	        imageView.setFitHeight(100);
 			Text name = new Text(weapon.getName());
 			Text price = new Text("Price: " + weapon.getPrice());
 			Text damagePoints= new Text("Damage: " + weapon.getDamage());
-			temp.getChildren().addAll(imageView,name,price,damagePoints);
+			Text type= new Text("Type: " + typeS);
+			temp.getChildren().addAll(imageView,name,price,damagePoints,type);
 			Tooltip tooltip = new Tooltip("Range: "+ range);
 	        Tooltip.install(temp, tooltip);
 			temp.setAlignment(Pos.CENTER);
@@ -140,24 +191,42 @@ public class MainPageController {
 			weapons.add(temp);
 		}
 		 return weapons;
-	}
+	}	
 	private void lanesBuilder() throws FileNotFoundException {
 		lanes = FXCollections.observableArrayList();
 		ArrayList<Lane> originalLanes = battle.getOriginalLanes();
 		HashMap<Integer,WeaponRegistry> shop = this.battle.getWeaponFactory().getWeaponShop();
+		dangerLevel = (VBox) layout.lookup("#dangerLevel");
 		int heightPerLane = 0;
 		int imageSize = 0;
 		int wallLength = 0;
+		int wallrecLength = 0;
 		if(battle.getOriginalLanes().size()==3) {
 			heightPerLane = (int) (700/3);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-14;
+			wallrecLength = wallLength - 7;
+			//dangerLevel.getChildren().addAll(lane1, lane2, lane3);
+			//dangerLevel.setAlignment(Pos.TOP_CENTER);
 		}
 		else {
 			heightPerLane = (int) (700/5);
 			imageSize = (int)(heightPerLane/4)-22;
 			wallLength = heightPerLane-22;
+			wallrecLength = wallLength - 10;
+			//dangerLevel.getChildren().addAll(lane1, lane2, lane3,lane4,lane5);
+			//dangerLevel.setAlignment(Pos.TOP_CENTER);
 		}
+		
+		for(int i=0; i<numOfLanes; i++) {
+        	VBox dangerEach= new VBox();
+			dangerEach.setPrefHeight(heightPerLane);
+			Text sumEach= new Text("0");
+			dangerLabel= new Label("Danger Level: ");
+			dangerLevel.getChildren().add(dangerEach);
+			dangerEach.getChildren().addAll(dangerLabel,sumEach);
+			dangerEach.setAlignment(Pos.CENTER);
+        }
 		
 		for(int i = 0;i<originalLanes.size();i++) {
 			HBox wall = new HBox();
@@ -175,47 +244,35 @@ public class MainPageController {
 					default:fileName = "test";break;
 				}
 				ImageView image = new ImageView(new Image(new FileInputStream("images"+File.separator+fileName+".png")));
-		        Label amount = new Label("X0");
-		        amount.setAlignment(Pos.BASELINE_RIGHT);
+				Text amount = new Text("X0");
+		        amount.setFill(Color.WHITE);
 		        image.setFitWidth(imageSize);
 		        image.setFitHeight(imageSize);
+		        temp.setAlignment(Pos.BASELINE_RIGHT);
 		        temp.getChildren().addAll(image,amount);
-		        Insets margin = new Insets(0, 0, 10, 5);
-		        VBox.setMargin(wall, margin);
 		        weapons.add(temp, 0, j-1);
 			}
-			VBox wallWeaponsHealth = new VBox();
-			Rectangle wallShape = new Rectangle(50,wallLength);
-			wallShape.setFill(Color.GREY);
-			GridPane healthBar = new GridPane();
-	        int numCols = 10;
-	        for (int j = 0; j < numCols; j++) {
-	            Rectangle rect = new Rectangle(9 ,5);
-	            rect.setFill(Color.GREEN);
-	            healthBar.add(rect, j, 0);
-	        }
-	        HBox wallWeapons = new HBox();
-	        wallWeapons.setSpacing(5);
-	        wallWeapons.getChildren().addAll(wallShape,weapons);
-	        wallWeaponsHealth.getChildren().addAll(wallWeapons,healthBar);
-	        GridPane lane = new GridPane();
-	        lane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-	        Image grassImage = new Image(new FileInputStream("images"+File.separator+"grass.jpg")); // put desired image
-	        BackgroundImage backgroundImage = new BackgroundImage(
-	                grassImage,
-	                BackgroundRepeat.NO_REPEAT,
-	                BackgroundRepeat.NO_REPEAT,
-	                BackgroundPosition.CENTER,
-	                BackgroundSize.DEFAULT);
-	        StackPane lanesCont = new StackPane();
-	        lanesCont.setBackground(new Background(backgroundImage));
-	        lanesCont.getChildren().add(lane);
-	        wall.getChildren().addAll(wallWeaponsHealth,lanesCont);
-	        wall.setSpacing(5);
-	        Insets margin = new Insets(5, 0, 0, 0); // top, right, bottom, left
-	        VBox.setMargin(healthBar, margin);
+			VBox wallHealth = new VBox();
+			StackPane Wall = new StackPane();
+			Rectangle wallShape = new Rectangle(50,wallrecLength);
+			wallShape.setFill(Color.GRAY);			
+			Wall.getChildren().addAll(wallShape,weapons);
+			Wall.setAlignment(Pos.CENTER);
+			StackPane laneStack = new StackPane();
+			GridPane lane = new GridPane();
+	        laneStack.getChildren().add(lane);
+			ProgressBar healthBar = new ProgressBar();
+			int currentHealth = originalLanes.get(i).getLaneWall().getCurrentHealth();
+	        healthBar.setProgress(currentHealth/10000);
+	        healthBar.setPrefWidth(50);
+	        healthBar.setMaxWidth(50);
+	        healthBar.setPrefHeight(14);
+	        healthBar.setMaxHeight(14);
+	        healthBar.setStyle("-fx-accent: green;");
+	        wallHealth.getChildren().addAll(Wall,healthBar);
+			wall.getChildren().addAll(wallHealth,laneStack);
 	        lanes.add(wall);
-	        lanesCont.prefHeightProperty().bind(wall.heightProperty());
+	        //lanesCont.prefHeightProperty().bind(wall.heightProperty());
 	       // wallWeapons.prefHeightProperty().bind(wall.heightProperty());
 	       // wallShape.heightProperty().bind(wall.heightProperty());
 			}
@@ -293,7 +350,7 @@ public class MainPageController {
         };
 		turnBar.progressProperty().bind(task.progressProperty());
         new Thread(task).start();
-	}
+	}	
 	public void updateResources() {
 		Label resources = (Label) layout.lookup("#resourcesNum");
 		resources.setText(" : "+battle.getResourcesGathered());
@@ -361,14 +418,14 @@ public class MainPageController {
 			  StackPane lostLane = new StackPane();
 			  lostLane.setPrefWidth(1230);
 			  lostLane.prefHeight(230);
-			  Image soilImage = new Image(new FileInputStream("images"+File.separator+"soil.jpg")); // put desired image
+			 /* Image soilImage = new Image(new FileInputStream("images"+File.separator+"soil.jpg")); // put desired image
 			  BackgroundImage backgroundImage = new BackgroundImage(
 		                soilImage,
 		                BackgroundRepeat.NO_REPEAT,
 		                BackgroundRepeat.NO_REPEAT,
 		                BackgroundPosition.CENTER,
 		                BackgroundSize.DEFAULT);
-		      lostLane.setBackground(new Background(backgroundImage));
+		      lostLane.setBackground(new Background(backgroundImage));*/
 			  Label lost = new Label("This is  a Lost Lane");
 			  lostLane.getChildren().addAll(lost);
 			  fLane.getChildren().add(lostLane);
@@ -421,48 +478,21 @@ public class MainPageController {
 		  }
 	    }	    
 	}
-	public void selectionPopup() throws Exception {
-		Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.initStyle(StageStyle.UNDECORATED);
-        popup = (StackPane) FXMLLoader.load(getClass().getResource("passPurchasePopup.fxml"));
-        Scene scene = new Scene(popup,600,400);
-        popupStage.setScene(scene);
-        popupStage.initOwner(game.getWindow());
-        popupStage.show();
-        Button purchase = (Button) popup.lookup("#purchase");
-        purchase.setOnAction(e ->{
-        	popupStage.close();
-        	lanesList.setOnMouseClicked(e1 -> setLane());
-        });
-        Button passTurn = (Button) popup.lookup("#passTurn");
-        passTurn.setOnAction(e ->{
-        	popupStage.close();
-    		battle.passTurn();
-    		try {
-    			update();
-        		// give player 3 seconds to see changes
-    		}
-    		catch(Exception e1) {
-    			e1.printStackTrace();
-    		}
-        });
-        
-	}
+	
 	public void setLane() {
-		 int selectedIndex = lanesList.getSelectionModel().getSelectedIndex();
+		int selectedIndex = lanesList.getSelectionModel().getSelectedIndex();
         selectedLane = battle.getOriginalLanes().get(selectedIndex);
         weaponShop.setOnMouseClicked(e1 -> purchaseWeapon());
 	}
+	
 	public void purchaseWeapon() {
 		int weaponCode = weaponShop.getSelectionModel().getSelectedIndex()+1;
 		try {
 			battle.purchaseWeapon(weaponCode, selectedLane);
-			System.out.println(selectedLane.getLaneWall().getCurrentHealth());
 			selectedLane = null;
 			lanesList.setOnMouseClicked(null);
             weaponShop.setOnMouseClicked(null);
-            //updateWeaponsCounter();
+            //updateWeaponsCounter(weaponCode -1);
             update();
             // give player 3 seconds to notice changes
 		}
@@ -501,18 +531,31 @@ public class MainPageController {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
+		}	
+	}
+	
+	public void updateDangerlevels() {
+		//System.out.println(numOfLanes);
+		for(int i=0; i<numOfLanes; i++) {
+			//System.out.println(battle.getOriginalLanes().size());
+			Lane currLane= battle.getOriginalLanes().get(i);
+			VBox currDangerLane = (VBox) dangerLevel.getChildren().get(i);
+			Text currDangerText = (Text) currDangerLane.getChildren().get(1);
+			currDangerText.setText(currLane.getDangerLevel()+ " ");
 		}
-		
 	}
 	
 	public void update() throws Exception {
 		//updateWallHealth();
+		updateDangerlevels();
 		updateResources();
 		updateScore();
 		updateTurns();
 		updateTitansInLanes();
 		titanImages.getChildren().clear();
 		titanImages.getChildren().addAll(updateApproachingTitans());
+		updateWallHealthandWeaponsnum();
+		lanesList.setOnMouseClicked(null);
 		if(battle.isGameOver()) {
 			StackPane layout = new StackPane();
 	    	ImageView blood1 = new ImageView(new Image(new FileInputStream("images"+File.separator+"blood1.png")));
@@ -560,10 +603,55 @@ public class MainPageController {
 	                })
 	            );
 	    	timeline.play();
-	       window.setScene(s);
-	    }
-		else
-			selectionPopup();
-
+	        window.setScene(s);
+		}
+	}
+	public void updateWallHealthandWeaponsnum() {
+		ObservableList<HBox> lanes = lanesList.getItems();
+		for(int i =0 ;i<battle.getOriginalLanes().size();i++) {
+			if(!battle.getOriginalLanes().get(i).isLaneLost()) {
+				HBox allLane = lanes.get(i);
+				VBox allWall = (VBox) allLane.getChildren().get(0);
+				StackPane Wall = (StackPane) allWall.getChildren().get(0);
+				GridPane Weapons = (GridPane) Wall.getChildren().get(1);
+				int piercing = 0;
+				int sniper = 0;
+				int volley = 0;
+				int walltrap = 0;
+				Lane lane = battle.getOriginalLanes().get(i);
+				ArrayList<Weapon> weapons = lane.getWeapons();
+				for(int j=0;j<weapons.size();j++) {
+					Weapon temp = weapons.get(j);
+					if(temp instanceof PiercingCannon)
+						piercing++;
+					else if(temp instanceof SniperCannon)
+						sniper++;
+					else if(temp instanceof VolleySpreadCannon)
+						volley++;
+					else if(temp instanceof WallTrap)
+						walltrap++;
+				}
+				VBox piercingV = (VBox) Weapons.getChildren().get(0);
+				Text piercingL = (Text)piercingV.getChildren().get(1);
+				piercingL.setText("X"+piercing);
+				VBox sniperV = (VBox) Weapons.getChildren().get(1);
+				Text sniperL = (Text)sniperV.getChildren().get(1);
+				sniperL.setText("X"+sniper);
+				VBox volleyV = (VBox) Weapons.getChildren().get(2);
+				Text volleyL = (Text)volleyV.getChildren().get(1);
+				volleyL.setText("X"+volley);
+				VBox walltrapV = (VBox) Weapons.getChildren().get(3);
+				Text walltrapL = (Text)walltrapV.getChildren().get(1);
+				walltrapL.setText("X"+walltrap);
+				ProgressBar healthBar = (ProgressBar) allWall.getChildren().get(1);
+				int currentHealth = battle.getOriginalLanes().get(i).getLaneWall().getCurrentHealth();
+		        healthBar.setProgress((double)currentHealth/10000);
+		        healthBar.setStyle("-fx-accent: green;");
+		        
+			}
+		}
+		
+		
 	}
 }
+
