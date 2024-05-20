@@ -17,7 +17,7 @@
 	-fx-font-size:8;
 	-fx-text-fill: black;
 }
-#optionsVbox, #instructionPane{
+ #instructionPane{
 	-fx-border-style:none;
 	-fx-background-radius: 20; 
 	-fx-border-radius: 20; 

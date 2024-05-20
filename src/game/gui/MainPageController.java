@@ -97,7 +97,18 @@ public class MainPageController {
 		this.height = height;
 		this.battle = new Battle(1, 0, 59, numOfLanes, resources);
 		layout = FXMLLoader.load(getClass().getResource("MainPage.fxml"));
-		
+		/* Image backgroundImage = new Image(new FileInputStream("images"+File.separator+"back1.jpg")); // Replace with your image path
+	        // Create a BackgroundImage
+	        BackgroundImage background = new BackgroundImage(
+	            backgroundImage,
+	            BackgroundRepeat.NO_REPEAT, // or BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT_X, BackgroundRepeat.REPEAT_Y
+	            BackgroundRepeat.NO_REPEAT,
+	            BackgroundPosition.CENTER,
+	            new BackgroundSize(
+	                100, 100, true, true, true, false));
+	    Background bg = new Background(background);
+        layout.setBackground(bg);
+        */
 		game = new Scene(layout ,width , height);	
 		game.getStylesheets().add(getClass().getResource("home.css").toExternalForm());
 		weaponShop = (ListView<VBox>) layout.lookup("#weaponShop");
@@ -254,9 +265,13 @@ public class MainPageController {
 			}
 			VBox wallHealth = new VBox();
 			StackPane Wall = new StackPane();
-			Rectangle wallShape = new Rectangle(50,wallrecLength);
-			wallShape.setFill(Color.GRAY);			
-			Wall.getChildren().addAll(wallShape,weapons);
+			ImageView brick = new ImageView(new Image(new FileInputStream("images"+File.separator+"wall.jpg")));
+			brick.setFitWidth(50);
+			brick.setFitHeight(wallrecLength);
+			Text amount = new Text("X0");
+			//Rectangle wallShape = new Rectangle(50,wallrecLength);
+			//wallShape.setFill(Color.GRAY);			
+			Wall.getChildren().addAll(brick,weapons);
 			Wall.setAlignment(Pos.CENTER);
 			StackPane laneStack = new StackPane();
 			GridPane lane = new GridPane();
@@ -273,9 +288,7 @@ public class MainPageController {
 			wall.getChildren().addAll(wallHealth,laneStack);
 	        lanes.add(wall);
 	        //lanesCont.prefHeightProperty().bind(wall.heightProperty());
-	       // wallWeapons.prefHeightProperty().bind(wall.heightProperty());
-	       // wallShape.heightProperty().bind(wall.heightProperty());
-			}
+		}
 	}
 	public Scene getGame() {
 		return game;
@@ -290,10 +303,11 @@ public class MainPageController {
 		   int currentDangerLevel= approachingTitans.get(i).getDangerLevel();
 		   
 		   switch(currentDangerLevel) {
-		       case 1:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"PureTitan.png")));break;
-		       case 2:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"AbnormalTitan.png")));break;
-		       case 3:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"ArmoredTitan.png")));break;
-		       case 4:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"ColossalTitan.png")));break;
+		       case 1:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"puretitan.png")));break;
+		       case 2:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"abnormaltitan.png")));break;
+		       case 3:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"armoredtitan.png")));break;
+		       case 4:  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"colossaltitan.png"
+		       		+ "")));break;
 		       default: currentImage = null;break;
 		   }
 		
@@ -363,6 +377,14 @@ public class MainPageController {
 		for (int i = 0; i < numOfLanes; i++) {//passes on every lane
 			HBox temp = lanes.get(i);
 			StackPane cont = (StackPane) temp.getChildren().get(1);
+			Image grass = new Image(new FileInputStream("images"+File.separator+"grass.jpg")); // put desired image
+			  BackgroundImage backgroundImage = new BackgroundImage(
+		                grass,
+		                BackgroundRepeat.NO_REPEAT,
+		                BackgroundRepeat.NO_REPEAT,
+		                BackgroundPosition.CENTER,
+		                BackgroundSize.DEFAULT);
+		      cont.setBackground(new Background(backgroundImage));
 			GridPane currentLane = (GridPane) cont.getChildren().get(0);
 		  for (int j = 0; j < 29; j++) {// adds each cell
 			  StackPane cell = new StackPane();
@@ -418,14 +440,14 @@ public class MainPageController {
 			  StackPane lostLane = new StackPane();
 			  lostLane.setPrefWidth(1230);
 			  lostLane.prefHeight(230);
-			 /* Image soilImage = new Image(new FileInputStream("images"+File.separator+"soil.jpg")); // put desired image
+			 Image soilImage = new Image(new FileInputStream("images"+File.separator+"lost.jpg")); // put desired image
 			  BackgroundImage backgroundImage = new BackgroundImage(
 		                soilImage,
 		                BackgroundRepeat.NO_REPEAT,
 		                BackgroundRepeat.NO_REPEAT,
 		                BackgroundPosition.CENTER,
 		                BackgroundSize.DEFAULT);
-		      lostLane.setBackground(new Background(backgroundImage));*/
+		      lostLane.setBackground(new Background(backgroundImage));
 			  Label lost = new Label("This is  a Lost Lane");
 			  lostLane.getChildren().addAll(lost);
 			  fLane.getChildren().add(lostLane);
@@ -454,17 +476,27 @@ public class MainPageController {
 			  	int distance = currTitan.getDistance();
 			  	int col = distance==0?0:distance/2 - 1;
 			  	int thealth = currTitan.getCurrentHealth();
-			  if(currTitan instanceof PureTitan) 
-			      currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"PureTitan.png")));
-			  else if (currTitan instanceof AbnormalTitan)
-				  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"AbnormalTitan.png")));
-			  else if (currTitan instanceof ArmoredTitan)
-				  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"ArmoredTitan.png")));
-			  else if (currTitan instanceof ColossalTitan)
-	              currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"ColossalTitan.png")));
+			  if(currTitan instanceof PureTitan) {
+				  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"puretitan.png")));
+				  currentImage.setFitWidth(50);
+				  currentImage.setFitHeight(50);
+			  }
+			  else if (currTitan instanceof AbnormalTitan) {
+				  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"abnormaltitan.png")));
+				  currentImage.setFitWidth(50);
+				  currentImage.setFitHeight(70);
+			  }
+			  else if (currTitan instanceof ArmoredTitan) {
+				  currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"armoredtitan.png")));
+				  currentImage.setFitWidth(50);
+				  currentImage.setFitHeight(50);
+			  }
+			  else if (currTitan instanceof ColossalTitan) {
+	              currentImage = new ImageView(new Image(new FileInputStream("images"+File.separator+"colossaltitan.png")));
+	              currentImage.setFitWidth(50);
+				  currentImage.setFitHeight(100);
+			  }
 			  
-			  currentImage.setFitWidth(25);
-			  currentImage.setFitHeight(25);
 			  StackPane currCell = (StackPane) cellsInLane.get(col);
 			  int parity = distance%2;
 			  VBox willAdd =  parity == 0? (VBox)currCell.getChildren().get(0):(VBox)currCell.getChildren().get(1);
