@@ -1,9 +1,23 @@
-
+#gameover{
+	-fx-font-size:50;
+	-fx-text-fill: black;
+}
+#MSGcont{
+	-fx-border-style:none;
+	-fx-background-radius: 20; 
+	-fx-border-radius: 20; 
+	-fx-background-color:white;
+}
+#message{
+	-fx-font-size:25;
+	-fx-text-fill: black;
+	-fx-font-style: italic;
+}
 #healthOfTitans{
 	-fx-font-size:8;
 	-fx-text-fill: black;
 }
-#optionsVbox, #instructionPane{
+ #instructionPane{
 	-fx-border-style:none;
 	-fx-background-radius: 20; 
 	-fx-border-radius: 20; 

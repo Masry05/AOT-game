@@ -26,7 +26,7 @@ public class HomeController implements Initializable{
 	   @FXML
 	    public Button startButton;
 	    public Button instructionButton;
-	    public Button titanArchiveButton;
+	    //public Button titanArchiveButton;
 	    public Button instructionExit;
 	    public VBox optionsVbox;
 	    @Override
@@ -37,7 +37,7 @@ public class HomeController implements Initializable{
 	    public void handleStartButtonClick(ActionEvent event) {
 	        // Get the button that was clicked
 	            ObservableList<Node> children=optionsVbox.getChildren();
-	            if(children.size() == 3) {
+	            if(children.size() == 2) {
 	            Button easy = new Button("Easy");
 	            easy.setId("mode");
 	            easy.setPrefHeight(30);
@@ -48,7 +48,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 				try {
-					MainPageController s = new MainPageController(3, 250, width, height);
+					MainPageController s = new MainPageController(3, 250, width, height,window);
 					window.setScene(s.getGame());
 					
 				} catch (IOException e1) {
@@ -69,7 +69,7 @@ public class HomeController implements Initializable{
 				    double width = clicked.getScene().getWidth();
 				    Stage window = (Stage) clicked.getScene().getWindow();
 					try {
-						MainPageController s = new MainPageController(5, 125, width, height);
+						MainPageController s = new MainPageController(5, 125, width, height,window);
 						window.setScene(s.getGame());
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -85,8 +85,8 @@ public class HomeController implements Initializable{
                 modes.setSpacing(25);
                 modes.setAlignment(Pos.CENTER);
                 Button instructions = (Button)optionsVbox.getChildren().remove(1);
-                Button titanArchive = (Button)optionsVbox.getChildren().remove(1);
-                optionsVbox.getChildren().addAll(modes, instructions, titanArchive);
+                //Button titanArchive = (Button)optionsVbox.getChildren().remove(1);
+                optionsVbox.getChildren().addAll(modes, instructions);
 	            }
 	            else {
 	            	optionsVbox.getChildren().remove(1);
@@ -107,20 +107,6 @@ public class HomeController implements Initializable{
 				try {
 					root = FXMLLoader.load(getClass().getResource("InstructionPopup.fxml"));
 					Scene instructionPop = new Scene (root, 300, 500);
-		            // Add event handler to close popup when clicking outside of it
-					 /*instructionPop.getRoot().addEventFilter(MouseEvent.MOUSE_CLICKED, mouseEvent-> {
-		                if (!popupStage.isShowing()) return; // Popup already closed
-		                double mouseX = mouseEvent.getSceneX();
-		                double mouseY = mouseEvent.getSceneY();
-		                double popupX = popupStage.getX();
-		                double popupY = popupStage.getY();
-		                double popupWidth = popupStage.getWidth();
-		                double popupHeight = popupStage.getHeight();
-		                if (mouseX < popupX || mouseX > popupX + popupWidth || mouseY < popupY || mouseY > popupY + popupHeight) 
-		                    return;
-		                
-		                popupStage.close();
-		            });*/
 		            popupStage.setScene(instructionPop);
 	                popupStage.show();
 				} catch (IOException e) {
