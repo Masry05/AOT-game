@@ -1,3 +1,4 @@
+
 package game.engine;
 
 import game.engine.weapons.factory.FactoryResponse;
@@ -12,7 +13,6 @@ import java.util.*;
 import static game.engine.dataloader.DataLoader.readTitanRegistry;
 
 public class Battle {
-
 	private final static int[][] PHASES_APPROACHING_TITANS = {{ 1, 1, 1, 2, 1, 3, 4 },
 															  { 2, 2, 2, 1, 3, 3, 4 },
 															  { 4, 4, 4, 4, 4, 4, 4 }};
@@ -136,7 +136,7 @@ public class Battle {
 	}
 	
 	public void purchaseWeapon(int weaponCode, Lane lane) throws InsufficientResourcesException,InvalidLaneException{
-		if(!lanes.contains(lane))
+		if(!lanes.contains(lane) && lane.isLaneLost())
 			throw new InvalidLaneException();
 		FactoryResponse boughtWeapon = weaponFactory.buyWeapon(resourcesGathered,weaponCode);
 		resourcesGathered = boughtWeapon.getRemainingResources();

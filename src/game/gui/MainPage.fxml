@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane id="gameScene" maxHeight="780.0" maxWidth="1500.0" minHeight="780.0" minWidth="1500.0" prefHeight="780.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gui.MainPageController">
+   <top>
+      <HBox fx:id="HUD" prefHeight="40.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox id="resources" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0">
+               <children>
+                  <ImageView id="resourcess" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/Resources.png" />
+                     </image>
+                  </ImageView>
+                  <Label id="resourcesNum" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox id="score" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0">
+               <children>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/Score.png" />
+                     </image>
+                  </ImageView>
+                  <Label id="scoreNum" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Region maxHeight="40.0" maxWidth="300.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0" />
+            <HBox id="upcomingTitans" prefHeight="66.0" prefWidth="470.0">
+               <children>
+                  <Label id="nextTitans" alignment="CENTER" contentDisplay="TOP" maxHeight="40.0" maxWidth="50.0" minHeight="40.0" minWidth="50.0" prefHeight="40.0" prefWidth="50.0" text="Next:" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <HBox fx:id="titanImages" maxHeight="40.0" maxWidth="480.0" minHeight="40.0" minWidth="480.0" prefHeight="40.0" prefWidth="480.0" />
+               </children></HBox>
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox id="turns" fx:id="turns" minHeight="40.0" minWidth="1500.0" prefHeight="40.0" prefWidth="1500.0" BorderPane.alignment="CENTER">
+         <children>
+            <Region minHeight="35.0" minWidth="350.0" prefHeight="35.0" prefWidth="350.0" />
+            <StackPane prefHeight="40.0" prefWidth="549.0">
+               <children>
+                  <ProgressBar id="turnBar" minHeight="20.0" minWidth="350.0" prefHeight="20.0" prefWidth="350.0" progress="0.0">
+                     <StackPane.margin>
+                        <Insets left="180.0" />
+                     </StackPane.margin>
+                  </ProgressBar>
+                  <StackPane prefHeight="40.0" prefWidth="440.0">
+                     <children>
+                        <Circle id="turnCircle" fill="DODGERBLUE" radius="19.0" stroke="BLACK" strokeType="INSIDE">
+                           <StackPane.margin>
+                              <Insets right="200.0" />
+                           </StackPane.margin>
+                        </Circle>
+                        <Text id="turnsText" strokeType="OUTSIDE" strokeWidth="0.0">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <StackPane.margin>
+                              <Insets bottom="4.0" right="202.0" />
+                           </StackPane.margin>
+                        </Text>
+                     </children>
+                  </StackPane>
+               </children>
+            </StackPane>
+         </children></HBox>
+   </bottom>
+   <right>
+      <VBox id="dangerLevel" fx:id="dangerLevel" maxHeight="700.0" maxWidth="100.0" minHeight="700.0" minWidth="100.0" prefHeight="700.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+   </right>
+   <left>
+      <ListView id="weaponShop" fx:id="weaponShop" maxHeight="700.0" maxWidth="170.0" minHeight="700.0" minWidth="170.0" prefHeight="700.0" prefWidth="170.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="10.0" />
+         </padding></ListView>
+   </left>
+   <center>
+      <ListView id="lanes" fx:id="lanes" maxHeight="700.0" maxWidth="1230.0" minHeight="700.0" minWidth="1230.0" prefHeight="700.0" prefWidth="1230.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
